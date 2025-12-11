@@ -88,12 +88,10 @@ export function ArticleDetailScreen({ route, navigation }: ArticleDetailScreenPr
       />
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.contentContainer}>
-        {/* Title */}
         <Text variant="headlineMedium" style={[styles.title, { color: theme.colors.onBackground }]}>
           {article.title}
         </Text>
 
-        {/* Metadata */}
         <View style={styles.metadata}>
           <View style={styles.metadataRow}>
             <Icon
@@ -132,7 +130,6 @@ export function ArticleDetailScreen({ route, navigation }: ArticleDetailScreenPr
           </View>
         </View>
 
-        {/* Stats */}
         <View style={styles.stats}>
           <Chip icon="arrow-up" style={styles.statChip}>
             {article.score} points
@@ -149,19 +146,17 @@ export function ArticleDetailScreen({ route, navigation }: ArticleDetailScreenPr
 
         <Divider style={styles.divider} />
 
-        {/* Article Text (for Ask HN posts) */}
         {article.text && (
           <View style={styles.textContainer}>
             <Text
               variant="bodyLarge"
               style={[styles.text, { color: theme.colors.onBackground }]}
             >
-              {article.text.replace(/<[^>]*>/g, '')} {/* Simple HTML strip */}
+              {article.text.replace(/<[^>]*>/g, '')}
             </Text>
           </View>
         )}
 
-        {/* External URL Button */}
         {article.url && (
           <Button
             mode="contained"
@@ -173,7 +168,6 @@ export function ArticleDetailScreen({ route, navigation }: ArticleDetailScreenPr
           </Button>
         )}
 
-        {/* Action Buttons */}
         <View style={styles.actions}>
           {article.isRead && (
             <Button mode="outlined" icon="eye-off" onPress={handleMarkUnread} style={styles.actionButton}>
@@ -182,7 +176,6 @@ export function ArticleDetailScreen({ route, navigation }: ArticleDetailScreenPr
           )}
         </View>
 
-        {/* Type Badge */}
         <View style={styles.footer}>
           <Chip mode="outlined" compact>
             Type: {article.type}

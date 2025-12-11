@@ -1,4 +1,3 @@
-// Core HN API response types
 export interface HNArticle {
   id: number;
   title: string;
@@ -12,7 +11,6 @@ export interface HNArticle {
   kids?: number[];
 }
 
-// HN User type
 export interface HNUser {
   id: string;
   created: number;
@@ -21,27 +19,21 @@ export interface HNUser {
   submitted?: number[];
 }
 
-// Enhanced article with user interaction data
 export interface Article extends HNArticle {
-  // User interaction flags
   isRead: boolean;
   isSaved: boolean;
   isFavorite: boolean;
 
-  // Metadata timestamps
   fetchedAt: number;
   readAt?: number;
   savedAt?: number;
   favoritedAt?: number;
 
-  // Feed classification
   feeds: FeedType[];
 }
 
-// Feed types
 export type FeedType = 'top' | 'new' | 'best' | 'ask';
 
-// Article action handlers
 export interface ArticleActions {
   markAsRead: (id: number) => Promise<void>;
   markAsUnread: (id: number) => Promise<void>;
@@ -52,19 +44,16 @@ export interface ArticleActions {
   deleteArticle: (id: number) => Promise<void>;
 }
 
-// Notification configuration
 export interface NotificationConfig {
   newTopStories: boolean;
   readLaterReminders: boolean;
   dailyDigest: boolean;
   trendingAlerts: boolean;
 
-  // Timing settings
-  dailyDigestTime: string; // Format: "09:00"
-  readLaterReminderHours: number; // Default: 24
+  dailyDigestTime: string; 
+  readLaterReminderHours: number; 
 }
 
-// Notification types
 export type NotificationType = 'new_top' | 'read_later' | 'daily_digest' | 'trending';
 
 export interface ArticleNotification {
@@ -76,7 +65,6 @@ export interface ArticleNotification {
   createdAt: number;
 }
 
-// Database row types (for SQLite queries)
 export interface ArticleRow {
   id: number;
   title: string;
@@ -87,8 +75,8 @@ export interface ArticleRow {
   score: number;
   descendants: number | null;
   type: string;
-  kids: string | null; // JSON array
-  is_read: number; // SQLite boolean (0 or 1)
+  kids: string | null; 
+  is_read: number; 
   is_saved: number;
   is_favorite: number;
   fetched_at: number;
@@ -107,19 +95,17 @@ export interface ArticleFeedRow {
 export interface NotificationQueueRow {
   id: string;
   type: NotificationType;
-  article_ids: string; // JSON array
+  article_ids: string;
   scheduled_for: number;
-  sent: number; // SQLite boolean (0 or 1)
+  sent: number; 
   created_at: number;
 }
 
-// API response types
 export interface HNStoriesResponse {
   ids: number[];
   feed: FeedType;
 }
 
-// User preferences
 export interface UserPreferences {
   notificationConfig: NotificationConfig;
   themeMode: 'light' | 'dark' | 'auto';
@@ -128,7 +114,6 @@ export interface UserPreferences {
   notificationPermissionAsked: boolean;
 }
 
-// Cache metadata
 export interface CacheMetadata {
   lastSyncTop: number | null;
   lastSyncNew: number | null;
@@ -138,10 +123,8 @@ export interface CacheMetadata {
   cacheVersion: number;
 }
 
-// Swipe action types
 export type SwipeAction = 'read' | 'unread' | 'save' | 'unsave' | 'favorite' | 'unfavorite' | 'delete';
 
-// Filter and sort options
 export type ArticleFilter = 'all' | 'unread' | 'saved' | 'favorites';
 export type ArticleSort = 'time' | 'score' | 'title';
 export type SortDirection = 'asc' | 'desc';

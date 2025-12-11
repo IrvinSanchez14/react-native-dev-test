@@ -3,9 +3,16 @@ import { StyleSheet } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
-import type { ArticleWebViewScreenProps } from '../types/navigation';
+import { useRoute, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation/AppNavigator';
 
-export function ArticleWebViewScreen({ route, navigation }: ArticleWebViewScreenProps) {
+type RouteProp = { params: RootStackParamList['ArticleWebView'] };
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+export function ArticleWebViewScreen() {
+  const route = useRoute<RouteProp>();
+  const navigation = useNavigation<NavigationProp>();
   const { url, title } = route.params;
 
   return (

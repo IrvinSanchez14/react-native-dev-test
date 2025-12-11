@@ -70,7 +70,7 @@ export type ArticleDetailScreenProps = CompositeScreenProps<
   BottomTabScreenProps<RootTabParamList>
 >;
 
-export type SettingsScreenProps = CompositeScreenProps<
+export type SavedSettingsScreenProps = CompositeScreenProps<
   NativeStackScreenProps<SavedStackParamList, 'Settings'>,
   BottomTabScreenProps<RootTabParamList>
 >;
@@ -128,6 +128,11 @@ export type DeletedArticlesScreenProps = CompositeScreenProps<
 
 export type ArticleWebViewScreenProps = CompositeScreenProps<
   NativeStackScreenProps<ArticlesStackParamList | FavoritesStackParamList, 'ArticleWebView'>,
+  BottomTabScreenProps<RootTabParamList>
+>;
+
+export type SettingsScreenProps = CompositeScreenProps<
+  NativeStackScreenProps<SettingsStackParamList, 'SettingsList'>,
   BottomTabScreenProps<RootTabParamList>
 >;
 

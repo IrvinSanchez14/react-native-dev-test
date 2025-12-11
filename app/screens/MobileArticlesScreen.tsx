@@ -2,16 +2,17 @@ import React from 'react';
 import { FlatList, RefreshControl, StyleSheet } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 import { useMobileArticles, useDeleteArticle, useToggleFavorite } from '../hooks/useMobileArticles';
 import { SwipeableArticleCard } from '../components/organisms/ArticleCard/SwipeableArticleCard';
 import { LoadingSpinner, EmptyState } from '../components/molecules';
 import { ScreenHeader } from '../components/molecules';
 import { MobileArticle } from '../types/mobile-article';
 import type { AppTheme } from '../theme/theme';
-import type { MobileArticlesScreenProps } from '../types/navigation';
 
-export function MobileArticlesScreen({ navigation }: MobileArticlesScreenProps) {
+export function MobileArticlesScreen() {
   const theme = useTheme<AppTheme>();
+  const navigation = useNavigation();
   const { data: articles = [], isLoading, refetch, isRefetching } = useMobileArticles();
   const deleteArticle = useDeleteArticle();
   const toggleFavorite = useToggleFavorite();

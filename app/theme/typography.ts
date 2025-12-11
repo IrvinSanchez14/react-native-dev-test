@@ -1,13 +1,9 @@
-// Typography configuration
-
 export const typography = {
-  // Font families (React Native default)
   regular: 'System',
   medium: 'System',
   bold: 'System',
   light: 'System',
 
-  // Font sizes
   fontSize: {
     xs: 10,
     sm: 12,
@@ -19,14 +15,12 @@ export const typography = {
     huge: 32,
   },
 
-  // Line heights
   lineHeight: {
     tight: 1.2,
     normal: 1.5,
     relaxed: 1.75,
   },
 
-  // Font weights
   fontWeight: {
     light: '300' as const,
     normal: '400' as const,
@@ -35,7 +29,6 @@ export const typography = {
     bold: '700' as const,
   },
 
-  // Letter spacing
   letterSpacing: {
     tight: -0.5,
     normal: 0,
@@ -43,9 +36,7 @@ export const typography = {
   },
 } as const;
 
-// Text styles
 export const textStyles = {
-  // Headings
   h1: {
     fontSize: typography.fontSize.xxxl,
     fontWeight: typography.fontWeight.bold,
@@ -67,7 +58,6 @@ export const textStyles = {
     lineHeight: typography.fontSize.lg * typography.lineHeight.normal,
   },
 
-  // Body text
   body: {
     fontSize: typography.fontSize.base,
     fontWeight: typography.fontWeight.normal,
@@ -84,7 +74,6 @@ export const textStyles = {
     lineHeight: typography.fontSize.sm * typography.lineHeight.normal,
   },
 
-  // Special text
   caption: {
     fontSize: typography.fontSize.xs,
     fontWeight: typography.fontWeight.normal,
@@ -101,7 +90,6 @@ export const textStyles = {
     letterSpacing: typography.letterSpacing.normal,
   },
 
-  // Article-specific
   articleTitle: {
     fontSize: typography.fontSize.lg,
     fontWeight: typography.fontWeight.semibold,

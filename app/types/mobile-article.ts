@@ -1,16 +1,12 @@
-// Simplified article type for mobile articles from Algolia API
-
 export interface MobileArticle {
-  id: string; // objectID from Algolia
+  id: string; 
   title: string;
   url: string;
   author: string;
   points: number;
   numComments: number;
-  createdAt: number; // Unix timestamp
-  createdAtString: string; // ISO string from API
-
-  // Local metadata
+  createdAt: number; 
+  createdAtString: string; 
   fetchedAt: number;
   isDeleted: boolean;
   deletedAt?: number;
@@ -28,13 +24,12 @@ export interface MobileArticleRow {
   created_at: number;
   created_at_string: string;
   fetched_at: number;
-  is_deleted: number; // SQLite boolean (0 or 1)
+  is_deleted: number; 
   deleted_at: number | null;
-  is_favorite: number; // SQLite boolean (0 or 1)
+  is_favorite: number; 
   favorited_at: number | null;
 }
 
-// Notification preferences
 export type NotificationTopic = 'android' | 'ios' | 'both';
 
 export interface NotificationPreferences {

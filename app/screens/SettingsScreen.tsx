@@ -12,7 +12,7 @@ import type { AppTheme } from '../theme/theme';
 import type { NotificationTopic } from '../types/mobile-article';
 import type { SettingsScreenProps } from '../types/navigation';
 
-export function SettingsScreen({ navigation }: SettingsScreenProps) {
+export function SettingsScreen({ navigation, route }: SettingsScreenProps) {
   const theme = useTheme<AppTheme>();
   const {
     notificationPreferences,

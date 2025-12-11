@@ -5,10 +5,8 @@ import { articleRepository } from '../services/database/articleRepository';
 import { FeedType } from '../types/article';
 
 interface ArticleStore {
-  // Sync metadata
   lastSync: Record<FeedType, number>;
 
-  // Article actions (optimistic updates)
   markAsRead: (id: number) => Promise<void>;
   markAsUnread: (id: number) => Promise<void>;
   saveArticle: (id: number) => Promise<void>;
@@ -17,11 +15,9 @@ interface ArticleStore {
   unfavoriteArticle: (id: number) => Promise<void>;
   deleteArticle: (id: number) => Promise<void>;
 
-  // Sync tracking
   setLastSync: (feed: FeedType, timestamp: number) => void;
   getLastSync: (feed: FeedType) => number;
 
-  // Utility
   resetStore: () => void;
 }
 
@@ -39,7 +35,6 @@ export const useArticleStore = create<ArticleStore>()(
     (set, get) => ({
       ...initialState,
 
-      // Mark article as read
       markAsRead: async (id: number) => {
         try {
           await articleRepository.markAsRead(id);
@@ -50,7 +45,6 @@ export const useArticleStore = create<ArticleStore>()(
         }
       },
 
-      // Mark article as unread
       markAsUnread: async (id: number) => {
         try {
           await articleRepository.markAsUnread(id);
@@ -61,7 +55,6 @@ export const useArticleStore = create<ArticleStore>()(
         }
       },
 
-      // Save article (bookmark)
       saveArticle: async (id: number) => {
         try {
           await articleRepository.saveArticle(id);
@@ -72,7 +65,6 @@ export const useArticleStore = create<ArticleStore>()(
         }
       },
 
-      // Unsave article (remove bookmark)
       unsaveArticle: async (id: number) => {
         try {
           await articleRepository.unsaveArticle(id);
@@ -83,7 +75,6 @@ export const useArticleStore = create<ArticleStore>()(
         }
       },
 
-      // Favorite article
       favoriteArticle: async (id: number) => {
         try {
           await articleRepository.favoriteArticle(id);
@@ -94,7 +85,6 @@ export const useArticleStore = create<ArticleStore>()(
         }
       },
 
-      // Unfavorite article
       unfavoriteArticle: async (id: number) => {
         try {
           await articleRepository.unfavoriteArticle(id);
@@ -105,7 +95,6 @@ export const useArticleStore = create<ArticleStore>()(
         }
       },
 
-      // Delete article
       deleteArticle: async (id: number) => {
         try {
           await articleRepository.deleteArticle(id);
@@ -116,7 +105,6 @@ export const useArticleStore = create<ArticleStore>()(
         }
       },
 
-      // Set last sync timestamp for a feed
       setLastSync: (feed: FeedType, timestamp: number) => {
         set(state => ({
           lastSync: {
@@ -126,12 +114,10 @@ export const useArticleStore = create<ArticleStore>()(
         }));
       },
 
-      // Get last sync timestamp for a feed
       getLastSync: (feed: FeedType) => {
         return get().lastSync[feed];
       },
 
-      // Reset store to initial state
       resetStore: () => {
         set(initialState);
       },
@@ -139,7 +125,6 @@ export const useArticleStore = create<ArticleStore>()(
     {
       name: 'article-store',
       storage: createJSONStorage(() => AsyncStorage),
-      // Only persist sync metadata, not actions
       partialize: state => ({
         lastSync: state.lastSync,
       }),

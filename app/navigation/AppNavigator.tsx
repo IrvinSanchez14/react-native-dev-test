@@ -13,15 +13,13 @@ export type RootStackParamList = {
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-export function AppNavigator() {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen name="MobileArticles" component={MobileArticlesScreen} />
-      <Stack.Screen name="ArticleWebView" component={ArticleWebViewScreen} />
-    </Stack.Navigator>
-  );
-}
+export const AppNavigator = () => (
+  <Stack.Navigator
+    screenOptions={{
+      headerShown: false,
+    }}
+  >
+    <Stack.Screen name="MobileArticles" component={MobileArticlesScreen} />
+    <Stack.Screen name="ArticleWebView" component={ArticleWebViewScreen} />
+  </Stack.Navigator>
+);

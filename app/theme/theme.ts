@@ -1,8 +1,7 @@
 import { MD3LightTheme, MD3DarkTheme } from 'react-native-paper';
 import type { MD3Theme } from 'react-native-paper';
-import { colors, lightColors, darkColors } from './colors';
+import { colors } from './colors';
 
-// Extend the theme type to include custom properties
 export type AppTheme = MD3Theme & {
   custom: {
     colors: typeof colors;
@@ -12,7 +11,6 @@ export type AppTheme = MD3Theme & {
   };
 };
 
-// Spacing scale
 export const spacing = {
   xs: 4,
   sm: 8,
@@ -22,7 +20,6 @@ export const spacing = {
   xxl: 48,
 } as const;
 
-// Border radius scale
 export const borderRadius = {
   none: 0,
   sm: 4,
@@ -32,7 +29,6 @@ export const borderRadius = {
   full: 9999,
 } as const;
 
-// Shadow definitions
 export const shadows = {
   none: {
     shadowColor: '#000',
@@ -71,7 +67,6 @@ export const shadows = {
   },
 } as const;
 
-// Light theme
 export const lightTheme: AppTheme = {
   ...MD3LightTheme,
   colors: {
@@ -106,7 +101,6 @@ export const lightTheme: AppTheme = {
   },
 };
 
-// Dark theme
 export const darkTheme: AppTheme = {
   ...MD3DarkTheme,
   colors: {
@@ -141,7 +135,6 @@ export const darkTheme: AppTheme = {
   },
 };
 
-// Helper function to get theme based on mode
 export function getTheme(mode: 'light' | 'dark'): AppTheme {
   return mode === 'light' ? lightTheme : darkTheme;
 }

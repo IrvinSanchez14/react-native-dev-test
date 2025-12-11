@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, Linking } from 'react-native';
+import { Linking } from 'react-native';
 import { Chip } from '../../atoms';
+import { styles } from './DomainChip.styles';
 
 export interface DomainChipProps {
   url: string;
@@ -42,14 +43,3 @@ export function DomainChip({ url, onPress }: DomainChipProps) {
     </Chip>
   );
 }
-
-const styles = StyleSheet.create({
-  chip: {
-    alignSelf: 'flex-start',
-    marginBottom: 8,
-    height: 24,
-  },
-  text: {
-    fontSize: 11,
-  },
-});

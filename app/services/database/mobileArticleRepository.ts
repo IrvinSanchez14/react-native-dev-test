@@ -2,7 +2,6 @@ import { database } from './database';
 import { MobileArticle, MobileArticleRow } from '../../types/mobile-article';
 import { AlgoliaArticle } from '../api/algoliaApi';
 
-// SQL for mobile articles table
 export const CREATE_MOBILE_ARTICLES_TABLE = `
   CREATE TABLE IF NOT EXISTS mobile_articles (
     id TEXT PRIMARY KEY,
@@ -26,7 +25,6 @@ export const CREATE_MOBILE_ARTICLES_INDEX = `
   ON mobile_articles(created_at DESC, is_deleted);
 `;
 
-// Additional indexes for mobile articles
 export const CREATE_MOBILE_ARTICLES_FAVORITE_INDEX = `
   CREATE INDEX IF NOT EXISTS idx_mobile_articles_favorite
   ON mobile_articles(is_favorite, favorited_at DESC)
@@ -40,25 +38,17 @@ export const CREATE_MOBILE_ARTICLES_DELETED_INDEX = `
 `;
 
 class MobileArticleRepository {
-  /**
-   * Initialize table (call this once on app start)
-   */
   async initialize(): Promise<void> {
     try {
       await database.exec(CREATE_MOBILE_ARTICLES_TABLE);
       await database.exec(CREATE_MOBILE_ARTICLES_INDEX);
       await database.exec(CREATE_MOBILE_ARTICLES_FAVORITE_INDEX);
       await database.exec(CREATE_MOBILE_ARTICLES_DELETED_INDEX);
-      console.log('[MobileArticleRepo] Tables and indexes initialized');
     } catch (error) {
-      console.error('[MobileArticleRepo] Failed to initialize:', error);
       throw error;
     }
   }
 
-  /**
-   * Convert database row to MobileArticle
-   */
   private rowToArticle(row: MobileArticleRow): MobileArticle {
     return {
       id: row.id,
@@ -77,9 +67,6 @@ class MobileArticleRepository {
     };
   }
 
-  /**
-   * Convert Algolia article to MobileArticle format
-   */
   private algoliaToMobileArticle(algolia: AlgoliaArticle): MobileArticle {
     return {
       id: algolia.objectID,
@@ -96,12 +83,9 @@ class MobileArticleRepository {
     };
   }
 
-  /**
-   * Insert or update articles from Algolia API
-   */
   async upsertArticles(algoliaArticles: AlgoliaArticle[]): Promise<void> {
     const statements = algoliaArticles
-      .filter(a => a.title && a.url) // Only insert valid articles with title and URL
+      .filter(a => a.title && a.url)
       .map(article => {
         const mobile = this.algoliaToMobileArticle(article);
         return {
@@ -123,9 +107,9 @@ class MobileArticleRepository {
             mobile.createdAt,
             mobile.createdAtString,
             mobile.fetchedAt,
-            mobile.id, // For COALESCE to preserve deletion status
             mobile.id,
-            mobile.id, // For COALESCE to preserve favorite status
+            mobile.id,
+            mobile.id,
             mobile.id,
           ],
         };
@@ -133,13 +117,9 @@ class MobileArticleRepository {
 
     if (statements.length > 0) {
       await database.transaction(statements);
-      console.log(`[MobileArticleRepo] Upserted ${statements.length} articles`);
     }
   }
 
-  /**
-   * Get all non-deleted articles sorted by date
-   */
   async getArticles(limit?: number): Promise<MobileArticle[]> {
     const sql = `
       SELECT * FROM mobile_articles
@@ -153,9 +133,6 @@ class MobileArticleRepository {
     return rows.map(row => this.rowToArticle(row));
   }
 
-  /**
-   * Get article by ID
-   */
   async getById(id: string): Promise<MobileArticle | null> {
     const row = await database.getFirst<MobileArticleRow>(
       'SELECT * FROM mobile_articles WHERE id = ?',
@@ -165,32 +142,21 @@ class MobileArticleRepository {
     return row ? this.rowToArticle(row) : null;
   }
 
-  /**
-   * Mark article as deleted
-   */
   async deleteArticle(id: string): Promise<void> {
     const now = Date.now();
     await database.run(
       'UPDATE mobile_articles SET is_deleted = 1, deleted_at = ? WHERE id = ?',
       [now, id]
     );
-    console.log(`[MobileArticleRepo] Deleted article ${id}`);
   }
 
-  /**
-   * Restore deleted article
-   */
   async restoreArticle(id: string): Promise<void> {
     await database.run(
       'UPDATE mobile_articles SET is_deleted = 0, deleted_at = NULL WHERE id = ?',
       [id]
     );
-    console.log(`[MobileArticleRepo] Restored article ${id}`);
   }
 
-  /**
-   * Toggle favorite status
-   */
   async toggleFavorite(id: string): Promise<void> {
     const article = await this.getById(id);
     if (!article) return;
@@ -203,12 +169,8 @@ class MobileArticleRepository {
       'UPDATE mobile_articles SET is_favorite = ?, favorited_at = ? WHERE id = ?',
       [newStatus, favoritedAt, id]
     );
-    console.log(`[MobileArticleRepo] Toggled favorite for ${id} to ${newStatus}`);
   }
 
-  /**
-   * Get favorite articles
-   */
   async getFavoriteArticles(): Promise<MobileArticle[]> {
     const rows = await database.getAll<MobileArticleRow>(
       `SELECT * FROM mobile_articles
@@ -218,9 +180,6 @@ class MobileArticleRepository {
     return rows.map(row => this.rowToArticle(row));
   }
 
-  /**
-   * Get deleted articles
-   */
   async getDeletedArticles(): Promise<MobileArticle[]> {
     const rows = await database.getAll<MobileArticleRow>(
       `SELECT * FROM mobile_articles
@@ -230,9 +189,6 @@ class MobileArticleRepository {
     return rows.map(row => this.rowToArticle(row));
   }
 
-  /**
-   * Check if article exists (including deleted ones)
-   */
   async exists(id: string): Promise<boolean> {
     const result = await database.getFirst<{ count: number }>(
       'SELECT COUNT(*) as count FROM mobile_articles WHERE id = ?',
@@ -241,9 +197,6 @@ class MobileArticleRepository {
     return (result?.count || 0) > 0;
   }
 
-  /**
-   * Get total count of non-deleted articles
-   */
   async getCount(): Promise<number> {
     const result = await database.getFirst<{ count: number }>(
       'SELECT COUNT(*) as count FROM mobile_articles WHERE is_deleted = 0'
@@ -251,9 +204,6 @@ class MobileArticleRepository {
     return result?.count || 0;
   }
 
-  /**
-   * Clean up old articles (keep deleted article IDs for 30 days)
-   */
   async cleanup(daysToKeep: number = 30): Promise<number> {
     const cutoffTime = Date.now() - daysToKeep * 24 * 60 * 60 * 1000;
 
@@ -262,16 +212,11 @@ class MobileArticleRepository {
       [cutoffTime]
     );
 
-    console.log(`[MobileArticleRepo] Cleaned up ${result.changes} old deleted articles`);
     return result.changes;
   }
 
-  /**
-   * Clear all data (for testing)
-   */
   async clearAll(): Promise<void> {
     await database.run('DELETE FROM mobile_articles');
-    console.log('[MobileArticleRepo] Cleared all articles');
   }
 }
 

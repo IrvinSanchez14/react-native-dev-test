@@ -1,10 +1,11 @@
 import React, { useCallback } from 'react';
-import { FlatList, RefreshControl, StyleSheet } from 'react-native';
+import { FlatList, RefreshControl } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { ArticleCard } from '../ArticleCard';
 import { LoadingSpinner, EmptyState } from '../../molecules';
 import type { Article } from '../../../types/article';
 import type { AppTheme } from '../../../theme/theme';
+import { styles } from './ArticleList.styles';
 
 export interface ArticleListProps {
   articles: Article[];
@@ -43,10 +44,10 @@ export function ArticleList({
 }: ArticleListProps) {
   const theme = useTheme<AppTheme>();
 
-  // Memoize keyExtractor to prevent re-creating on each render
+
   const keyExtractor = useCallback((item: Article) => item.id.toString(), []);
 
-  // Memoize renderItem to prevent re-creating on each render
+
   const renderItem = useCallback(
     ({ item }: { item: Article }) => (
       <ArticleCard
@@ -60,12 +61,12 @@ export function ArticleList({
     [onArticlePress, onSaveArticle, onFavoriteArticle, showActions]
   );
 
-  // Show loading indicator on initial load
+
   if (isLoading && articles.length === 0) {
     return <LoadingSpinner message="Loading articles..." />;
   }
 
-  // Show empty state when no articles
+
   if (!isLoading && articles.length === 0) {
     return (
       <EmptyState
@@ -109,12 +110,3 @@ export function ArticleList({
     />
   );
 }
-
-const styles = StyleSheet.create({
-  contentContainer: {
-    paddingVertical: 8,
-  },
-  emptyContainer: {
-    flex: 1,
-  },
-});

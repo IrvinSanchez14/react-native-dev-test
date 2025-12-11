@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Linking, View } from 'react-native';
+import { ScrollView, Linking, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useArticle, useArticleActions } from '../hooks/useArticles';
@@ -9,6 +9,7 @@ import { Text, Button, Chip, Divider, Icon } from '../components/atoms';
 import { formatRelativeTime, formatFullDate } from '../utils/dateHelpers';
 import type { ArticleDetailScreenProps } from '../types/navigation';
 import type { AppTheme } from '../theme/theme';
+import { styles } from './styles/ArticleDetailScreen.styles';
 
 export function ArticleDetailScreen({ route, navigation }: ArticleDetailScreenProps) {
   const { articleId } = route.params;
@@ -47,24 +48,24 @@ export function ArticleDetailScreen({ route, navigation }: ArticleDetailScreenPr
     }
   };
 
-  const handleToggleSave = async () => {
+  const handleToggleSave = () => {
     if (article.isSaved) {
-      await unsaveArticle.mutateAsync(article.id);
+      unsaveArticle.mutate(article.id);
     } else {
-      await saveArticle.mutateAsync(article.id);
+      saveArticle.mutate(article.id);
     }
   };
 
-  const handleToggleFavorite = async () => {
+  const handleToggleFavorite = () => {
     if (article.isFavorite) {
-      await unfavoriteArticle.mutateAsync(article.id);
+      unfavoriteArticle.mutate(article.id);
     } else {
-      await favoriteArticle.mutateAsync(article.id);
+      favoriteArticle.mutate(article.id);
     }
   };
 
-  const handleMarkUnread = async () => {
-    await markAsUnread.mutateAsync(article.id);
+  const handleMarkUnread = () => {
+    markAsUnread.mutate(article.id);
   };
 
   return (
@@ -188,63 +189,3 @@ export function ArticleDetailScreen({ route, navigation }: ArticleDetailScreenPr
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  contentContainer: {
-    padding: 16,
-  },
-  title: {
-    marginBottom: 16,
-    lineHeight: 32,
-  },
-  metadata: {
-    marginBottom: 16,
-  },
-  metadataRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  icon: {
-    marginRight: 8,
-  },
-  stats: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: 16,
-  },
-  statChip: {
-    marginRight: 8,
-    marginBottom: 8,
-  },
-  divider: {
-    marginBottom: 16,
-  },
-  textContainer: {
-    marginBottom: 16,
-  },
-  text: {
-    lineHeight: 24,
-  },
-  urlButton: {
-    marginBottom: 16,
-  },
-  actions: {
-    marginBottom: 16,
-  },
-  actionButton: {
-    marginBottom: 8,
-  },
-  footer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginTop: 16,
-  },
-});

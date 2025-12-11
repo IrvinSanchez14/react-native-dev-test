@@ -1,9 +1,9 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import { useTheme, List } from 'react-native-paper';
 import { Card, CardContent, Text, ListItem, Switch, SegmentedButtons, Button, Divider } from '../../atoms';
 import type { NotificationTopic } from '../../../types/mobile-article';
 import type { AppTheme } from '../../../theme/theme';
+import { styles } from './NotificationSettings.styles';
 
 export interface NotificationSettingsProps {
   enabled: boolean;
@@ -130,24 +130,3 @@ export function NotificationSettings({
     </Card>
   );
 }
-
-const styles = StyleSheet.create({
-  card: {
-    margin: 16,
-    marginBottom: 0,
-  },
-  sectionTitle: {
-    marginBottom: 16,
-    fontWeight: '600',
-  },
-  sectionLabel: {
-    marginBottom: 8,
-    fontWeight: '600',
-  },
-  divider: {
-    marginVertical: 16,
-  },
-  testButton: {
-    marginTop: 8,
-  },
-});

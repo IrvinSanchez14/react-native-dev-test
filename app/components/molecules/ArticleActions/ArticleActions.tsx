@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, StyleSheet, Linking } from 'react-native';
+import { View, Linking } from 'react-native';
 import { IconButton } from '../../atoms';
 import { useTheme } from 'react-native-paper';
 import type { Article } from '../../../types/article';
 import type { AppTheme } from '../../../theme/theme';
+import { styles } from './ArticleActions.styles';
 
 export interface ArticleActionsProps {
   article: Article;
@@ -64,12 +65,3 @@ export function ArticleActions({ article, onSave, onFavorite, onExternal }: Arti
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginTop: 4,
-    marginRight: -8,
-  },
-});

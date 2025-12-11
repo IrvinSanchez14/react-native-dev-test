@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { Chip } from '../../atoms';
 import { useTheme } from 'react-native-paper';
 import type { AppTheme } from '../../../theme/theme';
+import { styles } from './ArticleStatusChips.styles';
 
 export interface ArticleStatusChipsProps {
   isRead?: boolean;
@@ -13,7 +14,7 @@ export interface ArticleStatusChipsProps {
 export function ArticleStatusChips({ isRead, isSaved, isFavorite }: ArticleStatusChipsProps) {
   const theme = useTheme<AppTheme>();
 
-  // Don't render if no status is true
+
   if (!isRead && !isSaved && !isFavorite) {
     return null;
   }
@@ -56,19 +57,3 @@ export function ArticleStatusChips({ isRead, isSaved, isFavorite }: ArticleStatu
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: 4,
-  },
-  chip: {
-    marginRight: 6,
-    marginBottom: 4,
-    height: 24,
-  },
-  text: {
-    fontSize: 11,
-  },
-});

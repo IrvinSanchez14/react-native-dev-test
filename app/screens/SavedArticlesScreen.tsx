@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSavedArticles, useFavoriteArticles, useArticleActions } from '../hooks/useArticles';
 import { ScreenHeader } from '../components/molecules';
@@ -7,6 +7,7 @@ import { ArticleList } from '../components/organisms';
 import { SegmentedButtons } from '../components/atoms';
 import { Article } from '../types/article';
 import type { SavedListScreenProps } from '../types/navigation';
+import { styles } from './styles/SavedArticlesScreen.styles';
 
 type TabType = 'saved' | 'favorites';
 
@@ -97,13 +98,3 @@ export function SavedArticlesScreen({ navigation }: SavedListScreenProps) {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  segmentedContainer: {
-    padding: 16,
-    paddingBottom: 8,
-  },
-});

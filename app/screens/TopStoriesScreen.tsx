@@ -1,11 +1,11 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTopStories, useArticleActions } from '../hooks/useArticles';
 import { ScreenHeader } from '../components/molecules';
 import { ArticleList } from '../components/organisms';
 import { Article } from '../types/article';
 import type { TopStoriesListScreenProps } from '../types/navigation';
+import { styles } from './styles/TopStoriesScreen.styles';
 
 export function TopStoriesScreen({ navigation }: TopStoriesListScreenProps) {
   const {
@@ -20,17 +20,17 @@ export function TopStoriesScreen({ navigation }: TopStoriesListScreenProps) {
   const { saveArticle, unsaveArticle, favoriteArticle, unfavoriteArticle, markAsRead } =
     useArticleActions();
 
-  // Flatten pages into a single array
+
   const articles = React.useMemo(
     () => data?.pages.flatMap((page) => page.articles) ?? [],
     [data]
   );
 
   const handleArticlePress = async (article: Article) => {
-    // Mark as read when opening
+
     await markAsRead.mutateAsync(article.id);
 
-    // Navigate to article detail
+
     navigation.navigate('ArticleDetail', { articleId: article.id });
   };
 
@@ -76,9 +76,3 @@ export function TopStoriesScreen({ navigation }: TopStoriesListScreenProps) {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

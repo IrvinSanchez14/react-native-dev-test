@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import { Card, CardContent, Text, SegmentedButtons } from '../../atoms';
+import { styles } from './ThemeSettings.styles';
 
 export interface ThemeSettingsProps {
   themeMode: 'light' | 'dark' | 'auto';
@@ -44,19 +44,4 @@ export function ThemeSettings({ themeMode, onThemeChange }: ThemeSettingsProps) 
     </Card>
   );
 }
-
-const styles = StyleSheet.create({
-  card: {
-    margin: 16,
-    marginBottom: 0,
-  },
-  sectionTitle: {
-    marginBottom: 16,
-    fontWeight: '600',
-  },
-  sectionLabel: {
-    marginBottom: 8,
-    fontWeight: '600',
-  },
-});
 

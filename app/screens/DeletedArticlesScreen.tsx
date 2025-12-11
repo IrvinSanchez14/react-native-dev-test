@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, RefreshControl, StyleSheet } from 'react-native';
+import { FlatList, RefreshControl } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDeletedArticles, useRestoreArticle } from '../hooks/useMobileArticles';
@@ -10,6 +10,7 @@ import { MobileArticle } from '../types/mobile-article';
 import { formatRelativeTime } from '../utils/dateHelpers';
 import type { AppTheme } from '../theme/theme';
 import type { DeletedArticlesScreenProps } from '../types/navigation';
+import { styles } from './styles/DeletedArticlesScreen.styles';
 
 export function DeletedArticlesScreen({ navigation }: DeletedArticlesScreenProps) {
   const theme = useTheme<AppTheme>();
@@ -72,19 +73,3 @@ export function DeletedArticlesScreen({ navigation }: DeletedArticlesScreenProps
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  listContent: {
-    paddingVertical: 8,
-  },
-  card: {
-    marginHorizontal: 16,
-    marginVertical: 8,
-  },
-  restoreButton: {
-    marginTop: 12,
-  },
-});

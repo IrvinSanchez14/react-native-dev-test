@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { Spinner, Text } from '../../atoms';
+import { styles } from './LoadingSpinner.styles';
 
 export interface LoadingSpinnerProps {
   message?: string;
@@ -19,16 +20,3 @@ export function LoadingSpinner({ message, size = 'large' }: LoadingSpinnerProps)
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
-  },
-  message: {
-    marginTop: 16,
-    textAlign: 'center',
-  },
-});

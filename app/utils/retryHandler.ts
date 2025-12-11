@@ -49,10 +49,6 @@ export class RetryHandler {
 
         if (onRetry && error instanceof Error) {
           onRetry(attempt, error);
-        } else {
-          console.log(
-            `[RetryHandler] Retrying in ${delay}ms... (${retries} retries left)`
-          );
         }
 
         await new Promise(resolve => setTimeout(resolve, delay));

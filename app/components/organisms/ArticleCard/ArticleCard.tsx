@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Pressable } from 'react-native';
+import { Pressable } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { Card, CardContent, Text } from '../../atoms';
 import {
@@ -10,6 +10,7 @@ import {
 } from '../../molecules';
 import type { Article } from '../../../types/article';
 import type { AppTheme } from '../../../theme/theme';
+import { styles } from './ArticleCard.styles';
 
 export interface ArticleCardProps {
   article: Article;
@@ -77,7 +78,7 @@ function ArticleCardComponent({
   );
 }
 
-// Memoize to prevent unnecessary re-renders
+
 export const ArticleCard = React.memo(ArticleCardComponent, (prevProps, nextProps) => {
   return (
     prevProps.article.id === nextProps.article.id &&
@@ -86,18 +87,4 @@ export const ArticleCard = React.memo(ArticleCardComponent, (prevProps, nextProp
     prevProps.article.isFavorite === nextProps.article.isFavorite &&
     prevProps.showActions === nextProps.showActions
   );
-});
-
-const styles = StyleSheet.create({
-  card: {
-    marginHorizontal: 16,
-    marginVertical: 8,
-  },
-  content: {
-    paddingVertical: 12,
-  },
-  title: {
-    marginBottom: 8,
-    lineHeight: 22,
-  },
 });

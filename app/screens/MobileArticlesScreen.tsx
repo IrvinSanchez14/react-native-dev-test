@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, RefreshControl, StyleSheet } from 'react-native';
+import { FlatList, RefreshControl } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -9,6 +9,7 @@ import { LoadingSpinner, EmptyState } from '../components/molecules';
 import { ScreenHeader } from '../components/molecules';
 import { MobileArticle } from '../types/mobile-article';
 import type { AppTheme } from '../theme/theme';
+import { styles } from './styles/MobileArticlesScreen.styles';
 
 export function MobileArticlesScreen() {
   const theme = useTheme<AppTheme>();
@@ -77,12 +78,3 @@ export function MobileArticlesScreen() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  listContent: {
-    paddingVertical: 8,
-  },
-});

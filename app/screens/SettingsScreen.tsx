@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, StyleSheet, View, Alert } from 'react-native';
+import { ScrollView, View, Alert } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUserPreferencesStore } from '../store/userPreferencesStore';
@@ -11,6 +11,7 @@ import { Card, CardContent, Text, Divider } from '../components/atoms';
 import type { AppTheme } from '../theme/theme';
 import type { NotificationTopic } from '../types/mobile-article';
 import type { SettingsScreenProps } from '../types/navigation';
+import { styles } from './styles/SettingsScreen.styles';
 
 export function SettingsScreen({ navigation, route }: SettingsScreenProps) {
   const theme = useTheme<AppTheme>();
@@ -34,7 +35,7 @@ export function SettingsScreen({ navigation, route }: SettingsScreenProps) {
 
   const handleNotificationToggle = async () => {
     if (!notificationPreferences.enabled) {
-      // User is enabling notifications - request permission
+
       const granted = await notificationService.requestPermissions();
 
       if (granted) {
@@ -44,9 +45,8 @@ export function SettingsScreen({ navigation, route }: SettingsScreenProps) {
         });
         await checkPermissionStatus();
 
-        // Register background fetch
+
         await registerBackgroundFetch();
-        console.log('[Settings] Background fetch registered');
       } else {
         Alert.alert(
           'Permission Denied',
@@ -55,13 +55,12 @@ export function SettingsScreen({ navigation, route }: SettingsScreenProps) {
         );
       }
     } else {
-      // User is disabling notifications
+
       updateNotificationPreferences({ enabled: false });
       await notificationService.cancelAllNotifications();
 
-      // Unregister background fetch
+
       await unregisterBackgroundFetch();
-      console.log('[Settings] Background fetch unregistered');
     }
   };
 
@@ -123,7 +122,7 @@ export function SettingsScreen({ navigation, route }: SettingsScreenProps) {
             text: 'Run Now',
             onPress: async () => {
               try {
-                // Import the background fetch task logic
+
                 const { algoliaApi } = await import('../services/api/algoliaApi');
 
                 const response = await algoliaApi.fetchMobileArticles(0);
@@ -134,7 +133,7 @@ export function SettingsScreen({ navigation, route }: SettingsScreenProps) {
                   return;
                 }
 
-                // Send notifications for top 3 articles
+
                 const articlesToNotify = articles.slice(0, 3);
                 for (const article of articlesToNotify) {
                   await notificationService.scheduleNewArticleNotification(
@@ -244,43 +243,3 @@ export function SettingsScreen({ navigation, route }: SettingsScreenProps) {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  card: {
-    margin: 16,
-    marginBottom: 0,
-  },
-  sectionTitle: {
-    marginBottom: 16,
-    fontWeight: '600',
-  },
-  sectionLabel: {
-    marginBottom: 8,
-    fontWeight: '600',
-  },
-  divider: {
-    marginVertical: 16,
-  },
-  testButton: {
-    marginTop: 8,
-  },
-  infoRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  footer: {
-    padding: 32,
-    alignItems: 'center',
-  },
-  footerText: {
-    textAlign: 'center',
-  },
-});

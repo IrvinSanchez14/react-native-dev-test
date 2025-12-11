@@ -5,7 +5,6 @@ export function formatRelativeTime(unixTimestamp: number): string {
     const date = fromUnixTime(unixTimestamp);
     return formatDistanceToNow(date, { addSuffix: true });
   } catch (error) {
-    console.error('Error formatting relative time:', error);
     return 'Unknown time';
   }
 }
@@ -24,7 +23,6 @@ export function formatShortDate(unixTimestamp: number): string {
 
     return format(date, 'MMM d');
   } catch (error) {
-    console.error('Error formatting short date:', error);
     return 'Unknown date';
   }
 }
@@ -34,7 +32,6 @@ export function formatFullDate(unixTimestamp: number): string {
     const date = fromUnixTime(unixTimestamp);
     return format(date, 'MMMM d, yyyy');
   } catch (error) {
-    console.error('Error formatting full date:', error);
     return 'Unknown date';
   }
 }
@@ -44,7 +41,6 @@ export function formatDateTime(unixTimestamp: number): string {
     const date = fromUnixTime(unixTimestamp);
     return format(date, "MMM d 'at' h:mm a");
   } catch (error) {
-    console.error('Error formatting date time:', error);
     return 'Unknown date';
   }
 }

@@ -1,4 +1,4 @@
-// App-wide constants
+
 import { API_CONFIG } from '../config/env';
 
 export const COLORS = {

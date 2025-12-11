@@ -3,7 +3,7 @@ import axios from 'axios';
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-// Mock the algoliaApi module
+
 jest.mock('../algoliaApi', () => {
   const mockClient = {
     get: jest.fn(),

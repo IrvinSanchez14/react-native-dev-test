@@ -106,7 +106,7 @@ describe('NotificationService', () => {
         new Error('Schedule error')
       );
 
-      // Should not throw
+
       await expect(
         notificationService.scheduleNewArticleNotification('Test')
       ).resolves.not.toThrow();

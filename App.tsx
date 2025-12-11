@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { PaperProvider } from 'react-native-paper';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -14,6 +14,7 @@ import { ErrorBoundary } from './app/components/ErrorBoundary';
 import { useAppInitialization } from './app/hooks/useAppInitialization';
 import { useAppTheme } from './app/hooks/useAppTheme';
 import { useNotificationNavigation } from './app/hooks/useNotificationNavigation';
+import { styles } from './App.styles';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -53,10 +54,3 @@ export default function App() {
     </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
-});

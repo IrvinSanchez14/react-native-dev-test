@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { MetadataItem } from '../MetadataItem';
 import { useTheme } from 'react-native-paper';
 import { formatRelativeTime } from '../../../utils/dateHelpers';
 import type { Article } from '../../../types/article';
 import type { AppTheme } from '../../../theme/theme';
+import { styles } from './ArticleMetadata.styles';
 
 export interface ArticleMetadataProps {
   article: Article;
@@ -47,18 +48,3 @@ export function ArticleMetadata({ article, showComments = true }: ArticleMetadat
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  metadataLeft: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    flex: 1,
-  },
-});

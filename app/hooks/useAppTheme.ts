@@ -3,10 +3,6 @@ import { useColorScheme } from 'react-native';
 import { useUserPreferencesStore } from '../store/userPreferencesStore';
 import { lightTheme, darkTheme } from '../theme/theme';
 
-/**
- * Hook for managing app theme
- * Handles theme selection based on user preferences and system color scheme
- */
 export function useAppTheme() {
   const systemColorScheme = useColorScheme();
   const { themeMode } = useUserPreferencesStore();

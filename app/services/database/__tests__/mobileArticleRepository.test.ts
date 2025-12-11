@@ -1,6 +1,6 @@
 import type { AlgoliaArticle } from '../../../types/algolia';
 
-// Mock the database module
+
 jest.mock('../../database/database', () => ({
   database: {
     exec: jest.fn(),
@@ -11,7 +11,7 @@ jest.mock('../../database/database', () => ({
   },
 }));
 
-// Mock the repository module
+
 jest.mock('../mobileArticleRepository', () => ({
   mobileArticleRepository: {
     initialize: jest.fn(),

@@ -2,9 +2,6 @@ import { database } from './database';
 import { Article, HNArticle, FeedType, ArticleRow, ArticleFeedRow } from '../../types/article';
 
 class ArticleRepository {
-  /**
-   * Convert database row to Article object
-   */
   private rowToArticle(row: ArticleRow): Article {
     return {
       id: row.id,
@@ -24,13 +21,10 @@ class ArticleRepository {
       readAt: row.read_at || undefined,
       savedAt: row.saved_at || undefined,
       favoritedAt: row.favorited_at || undefined,
-      feeds: [], // Will be populated separately if needed
+      feeds: [],
     };
   }
 
-  /**
-   * Insert a single article
-   */
   async insert(article: HNArticle, feed: FeedType, position: number = 0): Promise<void> {
     const now = Date.now();
     const kids = article.kids ? JSON.stringify(article.kids) : null;
@@ -54,7 +48,6 @@ class ArticleRepository {
       ]
     );
 
-    // Insert feed mapping
     await database.run(
       `INSERT OR REPLACE INTO article_feeds
        (article_id, feed_type, position, fetched_at)
@@ -63,9 +56,6 @@ class ArticleRepository {
     );
   }
 
-  /**
-   * Bulk insert articles
-   */
   async bulkInsert(articles: HNArticle[], feed: FeedType): Promise<void> {
     const now = Date.now();
     const statements = [];
@@ -104,9 +94,6 @@ class ArticleRepository {
     await database.transaction(statements);
   }
 
-  /**
-   * Get article by ID
-   */
   async getById(id: number): Promise<Article | null> {
     const row = await database.getFirst<ArticleRow>(
       'SELECT * FROM articles WHERE id = ?',
@@ -120,9 +107,6 @@ class ArticleRepository {
     return this.rowToArticle(row);
   }
 
-  /**
-   * Get multiple articles by IDs
-   */
   async getByIds(ids: number[]): Promise<Article[]> {
     if (ids.length === 0) {
       return [];
@@ -137,12 +121,8 @@ class ArticleRepository {
     return rows.map(row => this.rowToArticle(row));
   }
 
-  /**
-   * Get articles for a specific feed
-   * Optimized query using index on (feed_type, position)
-   */
   async getByFeed(feed: FeedType, limit: number = 30, offset: number = 0): Promise<Article[]> {
-    // Use indexed query for better performance
+
     const rows = await database.getAll<ArticleRow>(
       `SELECT a.* 
        FROM articles a
@@ -156,9 +136,6 @@ class ArticleRepository {
     return rows.map(row => this.rowToArticle(row));
   }
 
-  /**
-   * Get saved articles
-   */
   async getSavedArticles(limit?: number): Promise<Article[]> {
     const sql = `SELECT * FROM articles
                  WHERE is_saved = 1
@@ -170,9 +147,6 @@ class ArticleRepository {
     return rows.map(row => this.rowToArticle(row));
   }
 
-  /**
-   * Get favorite articles
-   */
   async getFavoriteArticles(limit?: number): Promise<Article[]> {
     const sql = `SELECT * FROM articles
                  WHERE is_favorite = 1
@@ -184,9 +158,6 @@ class ArticleRepository {
     return rows.map(row => this.rowToArticle(row));
   }
 
-  /**
-   * Get unread articles
-   */
   async getUnreadArticles(limit?: number): Promise<Article[]> {
     const sql = `SELECT * FROM articles
                  WHERE is_read = 0
@@ -198,9 +169,6 @@ class ArticleRepository {
     return rows.map(row => this.rowToArticle(row));
   }
 
-  /**
-   * Mark article as read
-   */
   async markAsRead(id: number): Promise<void> {
     const now = Date.now();
     await database.run(
@@ -209,9 +177,6 @@ class ArticleRepository {
     );
   }
 
-  /**
-   * Mark article as unread
-   */
   async markAsUnread(id: number): Promise<void> {
     await database.run(
       'UPDATE articles SET is_read = 0, read_at = NULL WHERE id = ?',
@@ -219,9 +184,6 @@ class ArticleRepository {
     );
   }
 
-  /**
-   * Save article (bookmark)
-   */
   async saveArticle(id: number): Promise<void> {
     const now = Date.now();
     await database.run(
@@ -230,9 +192,6 @@ class ArticleRepository {
     );
   }
 
-  /**
-   * Unsave article (remove bookmark)
-   */
   async unsaveArticle(id: number): Promise<void> {
     await database.run(
       'UPDATE articles SET is_saved = 0, saved_at = NULL WHERE id = ?',
@@ -240,9 +199,6 @@ class ArticleRepository {
     );
   }
 
-  /**
-   * Favorite article
-   */
   async favoriteArticle(id: number): Promise<void> {
     const now = Date.now();
     await database.run(
@@ -251,9 +207,6 @@ class ArticleRepository {
     );
   }
 
-  /**
-   * Unfavorite article
-   */
   async unfavoriteArticle(id: number): Promise<void> {
     await database.run(
       'UPDATE articles SET is_favorite = 0, favorited_at = NULL WHERE id = ?',
@@ -261,17 +214,11 @@ class ArticleRepository {
     );
   }
 
-  /**
-   * Delete article completely
-   */
   async deleteArticle(id: number): Promise<void> {
-    // Foreign key constraint will auto-delete from article_feeds
+
     await database.run('DELETE FROM articles WHERE id = ?', [id]);
   }
 
-  /**
-   * Check if article exists
-   */
   async exists(id: number): Promise<boolean> {
     const result = await database.getFirst<{ count: number }>(
       'SELECT COUNT(*) as count FROM articles WHERE id = ?',
@@ -281,9 +228,6 @@ class ArticleRepository {
     return (result?.count || 0) > 0;
   }
 
-  /**
-   * Get total article count
-   */
   async getCount(): Promise<number> {
     const result = await database.getFirst<{ count: number }>(
       'SELECT COUNT(*) as count FROM articles'
@@ -292,9 +236,6 @@ class ArticleRepository {
     return result?.count || 0;
   }
 
-  /**
-   * Get count by filter
-   */
   async getCountByFilter(filter: 'saved' | 'favorite' | 'unread'): Promise<number> {
     const conditions = {
       saved: 'is_saved = 1',
@@ -309,9 +250,6 @@ class ArticleRepository {
     return result?.count || 0;
   }
 
-  /**
-   * Get count of articles for a specific feed
-   */
   async getCountByFeed(feed: FeedType): Promise<number> {
     const result = await database.getFirst<{ count: number }>(
       `SELECT COUNT(*) as count FROM articles a
@@ -323,9 +261,6 @@ class ArticleRepository {
     return result?.count || 0;
   }
 
-  /**
-   * Clean up old articles (keep saved/favorited)
-   */
   async cleanupOldArticles(daysToKeep: number = 30): Promise<number> {
     const cutoffTime = Date.now() - daysToKeep * 24 * 60 * 60 * 1000;
 
@@ -340,29 +275,22 @@ class ArticleRepository {
     return result.changes;
   }
 
-  /**
-   * Clear all feed mappings for a specific feed
-   */
   async clearFeed(feed: FeedType): Promise<void> {
     await database.run('DELETE FROM article_feeds WHERE feed_type = ?', [feed]);
   }
 
-  /**
-   * Get articles that were recently updated (for sync)
-   * Optimized to use fetched_at index
-   */
   async getRecentArticles(since: number, feed?: FeedType): Promise<Article[]> {
     let sql = `SELECT a.* FROM articles a`;
     const params: unknown[] = [since];
 
     if (feed) {
-      // Use indexed join for better performance
+
       sql += ` INNER JOIN article_feeds af ON a.id = af.article_id
                WHERE af.feed_type = ? AND a.fetched_at > ?
                ORDER BY a.fetched_at DESC`;
       params.unshift(feed);
     } else {
-      // Use fetched_at index for ordering
+
       sql += ` WHERE a.fetched_at > ?
                ORDER BY a.fetched_at DESC`;
     }
@@ -371,13 +299,8 @@ class ArticleRepository {
     return rows.map(row => this.rowToArticle(row));
   }
 
-  /**
-   * Search articles by title
-   * Uses FTS (Full-Text Search) if available, otherwise falls back to LIKE
-   * For better performance, consider creating an FTS virtual table
-   */
   async search(query: string, limit: number = 50): Promise<Article[]> {
-    // Use indexed time column for ordering
+
     const rows = await database.getAll<ArticleRow>(
       `SELECT * FROM articles
        WHERE title LIKE ? OR text LIKE ?
@@ -389,9 +312,6 @@ class ArticleRepository {
     return rows.map(row => this.rowToArticle(row));
   }
 
-  /**
-   * Get article statistics
-   */
   async getStatistics(): Promise<{
     total: number;
     saved: number;
@@ -413,5 +333,5 @@ class ArticleRepository {
   }
 }
 
-// Export singleton instance
+
 export const articleRepository = new ArticleRepository();

@@ -19,7 +19,7 @@ export function ScreenHeader({ title, subtitle, showBack, onBack, actions }: Scr
   return (
     <AppbarHeader>
       {showBack && <AppbarBackAction onPress={onBack} />}
-      <AppbarContent title={title} subtitle={subtitle} />
+      <AppbarContent title={title} subtitle={subtitle} titleStyle={{ fontSize: 20, marginLeft: 15 }} />
       {actions?.map((action, index) => (
         <AppbarAction
           key={index}

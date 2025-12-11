@@ -44,9 +44,6 @@ class AlgoliaAPI {
     });
   }
 
-  /**
-   * Fetch mobile-related articles sorted by date
-   */
   async fetchMobileArticles(page: number = 0, signal?: AbortSignal): Promise<AlgoliaResponse> {
     try {
       const response = await this.client.get<AlgoliaResponse>('/search_by_date', {
@@ -59,17 +56,12 @@ class AlgoliaAPI {
         signal,
       });
 
-      console.log(`[Algolia] Fetched ${response.data.hits.length} mobile articles`);
       return response.data;
     } catch (error) {
-      console.error('[Algolia] Error fetching articles:', error);
       throw error;
     }
   }
 
-  /**
-   * Check if API is reachable
-   */
   async ping(signal?: AbortSignal): Promise<boolean> {
     try {
       await this.client.get('/search_by_date', {

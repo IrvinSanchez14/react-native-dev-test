@@ -1,11 +1,11 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/AppNavigator';
+import { styles } from './styles/ArticleWebViewScreen.styles';
 
 type RouteProp = { params: RootStackParamList['ArticleWebView'] };
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -32,15 +32,3 @@ export function ArticleWebViewScreen() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  title: {
-    fontSize: 14,
-  },
-  webview: {
-    flex: 1,
-  },
-});

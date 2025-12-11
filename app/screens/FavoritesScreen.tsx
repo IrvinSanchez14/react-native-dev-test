@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, RefreshControl, StyleSheet } from 'react-native';
+import { FlatList, RefreshControl } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFavoriteArticles, useToggleFavorite } from '../hooks/useMobileArticles';
@@ -9,6 +9,7 @@ import { ScreenHeader } from '../components/molecules';
 import { MobileArticle } from '../types/mobile-article';
 import type { AppTheme } from '../theme/theme';
 import type { FavoritesScreenProps } from '../types/navigation';
+import { styles } from './styles/FavoritesScreen.styles';
 
 export function FavoritesScreen({ navigation }: FavoritesScreenProps) {
   const theme = useTheme<AppTheme>();
@@ -26,7 +27,8 @@ export function FavoritesScreen({ navigation }: FavoritesScreenProps) {
     toggleFavorite.mutate(article.id);
   };
 
-  if (isLoading) {
+  // Only show loading spinner on initial load when there's no data
+  if (isLoading && articles.length === 0) {
     return <LoadingSpinner message="Loading favorites..." />;
   }
 
@@ -67,12 +69,3 @@ export function FavoritesScreen({ navigation }: FavoritesScreenProps) {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  listContent: {
-    paddingVertical: 8,
-  },
-});

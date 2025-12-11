@@ -38,9 +38,7 @@ export const useArticleStore = create<ArticleStore>()(
       markAsRead: async (id: number) => {
         try {
           await articleRepository.markAsRead(id);
-          console.log(`Article ${id} marked as read`);
         } catch (error) {
-          console.error('Error marking article as read:', error);
           throw error;
         }
       },
@@ -48,9 +46,7 @@ export const useArticleStore = create<ArticleStore>()(
       markAsUnread: async (id: number) => {
         try {
           await articleRepository.markAsUnread(id);
-          console.log(`Article ${id} marked as unread`);
         } catch (error) {
-          console.error('Error marking article as unread:', error);
           throw error;
         }
       },
@@ -58,9 +54,7 @@ export const useArticleStore = create<ArticleStore>()(
       saveArticle: async (id: number) => {
         try {
           await articleRepository.saveArticle(id);
-          console.log(`Article ${id} saved`);
         } catch (error) {
-          console.error('Error saving article:', error);
           throw error;
         }
       },
@@ -68,9 +62,7 @@ export const useArticleStore = create<ArticleStore>()(
       unsaveArticle: async (id: number) => {
         try {
           await articleRepository.unsaveArticle(id);
-          console.log(`Article ${id} unsaved`);
         } catch (error) {
-          console.error('Error unsaving article:', error);
           throw error;
         }
       },
@@ -78,9 +70,7 @@ export const useArticleStore = create<ArticleStore>()(
       favoriteArticle: async (id: number) => {
         try {
           await articleRepository.favoriteArticle(id);
-          console.log(`Article ${id} favorited`);
         } catch (error) {
-          console.error('Error favoriting article:', error);
           throw error;
         }
       },
@@ -88,9 +78,7 @@ export const useArticleStore = create<ArticleStore>()(
       unfavoriteArticle: async (id: number) => {
         try {
           await articleRepository.unfavoriteArticle(id);
-          console.log(`Article ${id} unfavorited`);
         } catch (error) {
-          console.error('Error unfavoriting article:', error);
           throw error;
         }
       },
@@ -98,9 +86,7 @@ export const useArticleStore = create<ArticleStore>()(
       deleteArticle: async (id: number) => {
         try {
           await articleRepository.deleteArticle(id);
-          console.log(`Article ${id} deleted`);
         } catch (error) {
-          console.error('Error deleting article:', error);
           throw error;
         }
       },

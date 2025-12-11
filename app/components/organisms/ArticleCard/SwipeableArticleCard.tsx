@@ -1,11 +1,12 @@
 import React from 'react';
-import { StyleSheet, Pressable, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { Card, CardContent, Text, IconButton } from '../../atoms';
 import { SwipeableWrapper, MetadataItem, DomainChip } from '../../molecules';
 import { formatRelativeTime } from '../../../utils/dateHelpers';
 import type { MobileArticle } from '../../../types/mobile-article';
 import type { AppTheme } from '../../../theme/theme';
+import { styles } from './SwipeableArticleCard.styles';
 
 export interface SwipeableArticleCardProps {
   article: MobileArticle;
@@ -91,38 +92,11 @@ function SwipeableArticleCardComponent({
   );
 }
 
-// Memoize to prevent unnecessary re-renders
+
 export const SwipeableArticleCard = React.memo(SwipeableArticleCardComponent, (prevProps, nextProps) => {
   return (
     prevProps.article.id === nextProps.article.id &&
     prevProps.article.isFavorite === nextProps.article.isFavorite &&
     prevProps.showDelete === nextProps.showDelete
   );
-});
-
-const styles = StyleSheet.create({
-  card: {
-    width: '100%',
-  },
-  content: {
-    paddingVertical: 12,
-  },
-  title: {
-    marginBottom: 8,
-    lineHeight: 22,
-  },
-  metadata: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: 6,
-  },
-  domain: {
-    fontSize: 11,
-    fontStyle: 'italic',
-  },
-  favoriteContainer: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
-  },
 });

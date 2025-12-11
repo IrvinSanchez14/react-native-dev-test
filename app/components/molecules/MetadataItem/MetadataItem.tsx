@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { Icon, Text } from '../../atoms';
 import { useTheme } from 'react-native-paper';
 import type { AppTheme } from '../../../theme/theme';
+import { styles } from './MetadataItem.styles';
 
 export interface MetadataItemProps {
   icon: string;
@@ -28,15 +29,3 @@ export function MetadataItem({ icon, text, color }: MetadataItemProps) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: 12,
-    marginBottom: 4,
-  },
-  icon: {
-    marginRight: 4,
-  },
-});

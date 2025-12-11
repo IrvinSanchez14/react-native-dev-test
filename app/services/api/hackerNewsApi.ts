@@ -4,13 +4,9 @@ import { HNArticle, FeedType, HNUser } from '../../types/article';
 import { RetryHandler } from '../../utils/retryHandler';
 import { API_CONFIG } from '../../config/env';
 
-// Configuration
+
 const TIMEOUT = API_CONFIG.TIMEOUT;
 
-/**
- * Interface for HackerNews API
- * Allows for dependency injection and easier testing
- */
 export interface IHackerNewsAPI {
   getTopStories(signal?: AbortSignal): Promise<number[]>;
   getNewStories(signal?: AbortSignal): Promise<number[]>;
@@ -44,28 +40,19 @@ class HackerNewsAPI implements IHackerNewsAPI {
         },
       });
 
-    // Add request interceptor for logging
+
     this.client.interceptors.request.use(
-      config => {
-        console.log(`[HN API] ${config.method?.toUpperCase()} ${config.url}`);
-        return config;
-      },
+      config => config,
       error => Promise.reject(error)
     );
 
-    // Add response interceptor for error handling
+
     this.client.interceptors.response.use(
       response => response,
-      error => {
-        console.error('[HN API] Error:', error.message);
-        return Promise.reject(error);
-      }
+      error => Promise.reject(error)
     );
   }
 
-  /**
-   * Fetch story IDs for Top Stories feed
-   */
   async getTopStories(signal?: AbortSignal): Promise<number[]> {
     return RetryHandler.retryWithBackoff(
       async () => {
@@ -78,9 +65,6 @@ class HackerNewsAPI implements IHackerNewsAPI {
     );
   }
 
-  /**
-   * Fetch story IDs for New Stories feed
-   */
   async getNewStories(signal?: AbortSignal): Promise<number[]> {
     return RetryHandler.retryWithBackoff(
       async () => {
@@ -93,9 +77,6 @@ class HackerNewsAPI implements IHackerNewsAPI {
     );
   }
 
-  /**
-   * Fetch story IDs for Best Stories feed
-   */
   async getBestStories(signal?: AbortSignal): Promise<number[]> {
     return RetryHandler.retryWithBackoff(
       async () => {
@@ -108,9 +89,6 @@ class HackerNewsAPI implements IHackerNewsAPI {
     );
   }
 
-  /**
-   * Fetch story IDs for Ask HN feed
-   */
   async getAskStories(signal?: AbortSignal): Promise<number[]> {
     return RetryHandler.retryWithBackoff(
       async () => {
@@ -123,9 +101,6 @@ class HackerNewsAPI implements IHackerNewsAPI {
     );
   }
 
-  /**
-   * Fetch story IDs by feed type
-   */
   async getStoriesByFeed(feedType: FeedType, signal?: AbortSignal): Promise<number[]> {
     switch (feedType) {
       case 'top':
@@ -141,9 +116,6 @@ class HackerNewsAPI implements IHackerNewsAPI {
     }
   }
 
-  /**
-   * Fetch a single item by ID
-   */
   async getItem(id: number, signal?: AbortSignal): Promise<HNArticle | null> {
     return RetryHandler.retryWithBackoff(
       async () => {
@@ -156,18 +128,15 @@ class HackerNewsAPI implements IHackerNewsAPI {
     );
   }
 
-  /**
-   * Fetch multiple items by IDs
-   */
   async getItems(ids: number[], signal?: AbortSignal): Promise<HNArticle[]> {
     if (ids.length === 0) {
       return [];
     }
 
-    // Fetch items in parallel with limited concurrency
+
     const results = await Promise.allSettled(ids.map(id => this.getItem(id, signal)));
 
-    // Filter successful results and remove null values
+
     return results
       .filter(
         (result): result is PromiseFulfilledResult<HNArticle> =>
@@ -176,9 +145,6 @@ class HackerNewsAPI implements IHackerNewsAPI {
       .map(result => result.value);
   }
 
-  /**
-   * Fetch items in batches with concurrency limit
-   */
   async getItemsBatched(
     ids: number[],
     batchSize: number = API_CONFIG.BATCH_SIZE,
@@ -191,23 +157,22 @@ class HackerNewsAPI implements IHackerNewsAPI {
 
     const articles: HNArticle[] = [];
 
-    // Process in batches
+
     for (let i = 0; i < ids.length; i += batchSize) {
-      // Check if request was cancelled
+
       if (signal?.aborted) {
         throw new Error('Request cancelled');
       }
 
       const batch = ids.slice(i, i + batchSize);
-      console.log(`[HN API] Fetching batch ${i / batchSize + 1} (${batch.length} items)`);
 
-      // Split batch into smaller chunks for concurrent requests
+
       const chunks: number[][] = [];
       for (let j = 0; j < batch.length; j += maxConcurrent) {
         chunks.push(batch.slice(j, j + maxConcurrent));
       }
 
-      // Fetch each chunk concurrently
+
       for (const chunk of chunks) {
         if (signal?.aborted) {
           throw new Error('Request cancelled');
@@ -220,9 +185,6 @@ class HackerNewsAPI implements IHackerNewsAPI {
     return articles;
   }
 
-  /**
-   * Fetch user data by username
-   */
   async getUser(username: string, signal?: AbortSignal): Promise<HNUser> {
     return RetryHandler.retryWithBackoff(
       async () => {
@@ -235,9 +197,6 @@ class HackerNewsAPI implements IHackerNewsAPI {
     );
   }
 
-  /**
-   * Fetch max item ID
-   */
   async getMaxItemId(signal?: AbortSignal): Promise<number> {
     return RetryHandler.retryWithBackoff(
       async () => {
@@ -250,9 +209,6 @@ class HackerNewsAPI implements IHackerNewsAPI {
     );
   }
 
-  /**
-   * Check if API is reachable
-   */
   async ping(signal?: AbortSignal): Promise<boolean> {
     try {
       await this.client.get(HN_ENDPOINTS.MAX_ITEM, { timeout: 5000, signal });
@@ -265,9 +221,6 @@ class HackerNewsAPI implements IHackerNewsAPI {
     }
   }
 
-  /**
-   * Get error message from axios error
-   */
   getErrorMessage(error: unknown): string {
     if (axios.isAxiosError(error)) {
       const axiosError = error as AxiosError;
@@ -295,5 +248,5 @@ class HackerNewsAPI implements IHackerNewsAPI {
   }
 }
 
-// Export singleton instance
+
 export const hnApi = new HackerNewsAPI();

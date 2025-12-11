@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { Icon, Text, Button } from '../../atoms';
 import { useTheme } from 'react-native-paper';
 import type { AppTheme } from '../../../theme/theme';
+import { styles } from './EmptyState.styles';
 
 export interface EmptyStateProps {
   icon?: string;
@@ -44,26 +45,3 @@ export function EmptyState({ icon, title, message, actionLabel, onAction }: Empt
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 32,
-  },
-  icon: {
-    marginBottom: 16,
-  },
-  title: {
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  message: {
-    textAlign: 'center',
-    marginBottom: 24,
-  },
-  button: {
-    marginTop: 8,
-  },
-});

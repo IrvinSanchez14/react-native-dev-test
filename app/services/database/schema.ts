@@ -1,8 +1,8 @@
-// SQLite schema definitions for the application
+
 
 export const SCHEMA_VERSION = 1;
 
-// Create articles table
+
 export const CREATE_ARTICLES_TABLE = `
   CREATE TABLE IF NOT EXISTS articles (
     id INTEGER PRIMARY KEY,
@@ -27,7 +27,7 @@ export const CREATE_ARTICLES_TABLE = `
   );
 `;
 
-// Create article_feeds table (many-to-many relationship)
+
 export const CREATE_ARTICLE_FEEDS_TABLE = `
   CREATE TABLE IF NOT EXISTS article_feeds (
     article_id INTEGER NOT NULL,
@@ -40,7 +40,7 @@ export const CREATE_ARTICLE_FEEDS_TABLE = `
   );
 `;
 
-// Create notification_queue table
+
 export const CREATE_NOTIFICATION_QUEUE_TABLE = `
   CREATE TABLE IF NOT EXISTS notification_queue (
     id TEXT PRIMARY KEY,
@@ -52,7 +52,7 @@ export const CREATE_NOTIFICATION_QUEUE_TABLE = `
   );
 `;
 
-// Create indexes for performance
+
 export const CREATE_ARTICLES_SAVED_INDEX = `
   CREATE INDEX IF NOT EXISTS idx_articles_saved
   ON articles(is_saved, saved_at DESC)
@@ -76,25 +76,25 @@ export const CREATE_ARTICLE_FEEDS_TYPE_INDEX = `
   ON article_feeds(feed_type, position);
 `;
 
-// Composite index for feed queries with position ordering
+
 export const CREATE_ARTICLE_FEEDS_TYPE_POSITION_INDEX = `
   CREATE INDEX IF NOT EXISTS idx_article_feeds_type_position
   ON article_feeds(feed_type, position ASC);
 `;
 
-// Index for time-based queries
+
 export const CREATE_ARTICLES_TIME_INDEX = `
   CREATE INDEX IF NOT EXISTS idx_articles_time
   ON articles(time DESC);
 `;
 
-// Index for fetched_at queries (for cleanup and stale checks)
+
 export const CREATE_ARTICLES_FETCHED_AT_INDEX = `
   CREATE INDEX IF NOT EXISTS idx_articles_fetched_at
   ON articles(fetched_at DESC);
 `;
 
-// Composite index for feed + read status queries
+
 export const CREATE_ARTICLES_FEED_READ_INDEX = `
   CREATE INDEX IF NOT EXISTS idx_articles_feed_read
   ON articles(id, is_read, fetched_at DESC);
@@ -106,14 +106,14 @@ export const CREATE_NOTIFICATION_QUEUE_PENDING_INDEX = `
   WHERE sent = 0;
 `;
 
-// All table creation statements
+
 export const CREATE_TABLES = [
   CREATE_ARTICLES_TABLE,
   CREATE_ARTICLE_FEEDS_TABLE,
   CREATE_NOTIFICATION_QUEUE_TABLE,
 ];
 
-// All index creation statements
+
 export const CREATE_INDEXES = [
   CREATE_ARTICLES_SAVED_INDEX,
   CREATE_ARTICLES_FAVORITE_INDEX,
@@ -126,14 +126,14 @@ export const CREATE_INDEXES = [
   CREATE_NOTIFICATION_QUEUE_PENDING_INDEX,
 ];
 
-// Drop tables (for migrations)
+
 export const DROP_TABLES = [
   'DROP TABLE IF EXISTS notification_queue;',
   'DROP TABLE IF EXISTS article_feeds;',
   'DROP TABLE IF EXISTS articles;',
 ];
 
-// Migration scripts (for future schema changes)
+
 export interface Migration {
   version: number;
   up: string[];
@@ -141,17 +141,17 @@ export interface Migration {
 }
 
 export const MIGRATIONS: Migration[] = [
-  // Version 1: Initial schema
+
   {
     version: 1,
     up: [...CREATE_TABLES, ...CREATE_INDEXES],
     down: DROP_TABLES,
   },
-  // Future migrations will be added here
-  // Example:
-  // {
-  //   version: 2,
-  //   up: ['ALTER TABLE articles ADD COLUMN new_column TEXT;'],
-  //   down: ['ALTER TABLE articles DROP COLUMN new_column;'],
-  // },
+
+
+
+
+
+
+
 ];

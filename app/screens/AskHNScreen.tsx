@@ -1,11 +1,11 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAskStories, useArticleActions } from '../hooks/useArticles';
 import { ScreenHeader } from '../components/molecules';
 import { ArticleList } from '../components/organisms';
 import { Article } from '../types/article';
 import type { AskHNListScreenProps } from '../types/navigation';
+import { styles } from './styles/AskHNScreen.styles';
 
 export function AskHNScreen({ navigation }: AskHNListScreenProps) {
   const {
@@ -72,9 +72,3 @@ export function AskHNScreen({ navigation }: AskHNListScreenProps) {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

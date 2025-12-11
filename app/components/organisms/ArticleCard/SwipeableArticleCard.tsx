@@ -1,0 +1,128 @@
+import React from 'react';
+import { StyleSheet, Pressable, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
+import { Card, CardContent, Text, IconButton } from '../../atoms';
+import { SwipeableWrapper, MetadataItem, DomainChip } from '../../molecules';
+import { formatRelativeTime } from '../../../utils/dateHelpers';
+import type { MobileArticle } from '../../../types/mobile-article';
+import type { AppTheme } from '../../../theme/theme';
+
+export interface SwipeableArticleCardProps {
+  article: MobileArticle;
+  onPress: () => void;
+  onDelete: () => void;
+  onToggleFavorite?: () => void;
+  showDelete?: boolean;
+}
+
+function SwipeableArticleCardComponent({
+  article,
+  onPress,
+  onDelete,
+  onToggleFavorite,
+  showDelete = true,
+}: SwipeableArticleCardProps) {
+  const theme = useTheme<AppTheme>();
+
+  return (
+    <SwipeableWrapper onDelete={onDelete} showDelete={showDelete}>
+      <Card style={styles.card} mode="elevated">
+        <Pressable
+          onPress={onPress}
+          accessibilityRole="button"
+          accessibilityLabel={`Article: ${article.title}`}
+          accessibilityHint="Double tap to view article"
+        >
+          <CardContent style={styles.content}>
+            {/* Title */}
+            <Text variant="titleMedium" style={styles.title} numberOfLines={2}>
+              {article.title}
+            </Text>
+
+            {/* Metadata row */}
+            <View style={styles.metadata}>
+              <MetadataItem
+                icon="arrow-up"
+                text={article.points}
+                color={theme.custom.colors.primary}
+              />
+              <MetadataItem
+                icon="comment-outline"
+                text={article.numComments}
+              />
+              <MetadataItem
+                icon="account"
+                text={article.author}
+              />
+              <MetadataItem
+                icon="clock-outline"
+                text={formatRelativeTime(article.createdAt)}
+              />
+            </View>
+
+            {/* Domain */}
+            {article.url && (
+              <Text
+                variant="bodySmall"
+                style={[styles.domain, { color: theme.custom.colors.textSecondary }]}
+                numberOfLines={1}
+              >
+                {article.url.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]}
+              </Text>
+            )}
+
+            {/* Favorite button */}
+            {onToggleFavorite && (
+              <View style={styles.favoriteContainer}>
+                <IconButton
+                  icon={article.isFavorite ? 'star' : 'star-outline'}
+                  size={20}
+                  iconColor={article.isFavorite ? '#FFD700' : theme.custom.colors.textSecondary}
+                  onPress={onToggleFavorite}
+                  accessibilityLabel={article.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+                  accessibilityRole="button"
+                />
+              </View>
+            )}
+          </CardContent>
+        </Pressable>
+      </Card>
+    </SwipeableWrapper>
+  );
+}
+
+// Memoize to prevent unnecessary re-renders
+export const SwipeableArticleCard = React.memo(SwipeableArticleCardComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.article.id === nextProps.article.id &&
+    prevProps.article.isFavorite === nextProps.article.isFavorite &&
+    prevProps.showDelete === nextProps.showDelete
+  );
+});
+
+const styles = StyleSheet.create({
+  card: {
+    width: '100%',
+  },
+  content: {
+    paddingVertical: 12,
+  },
+  title: {
+    marginBottom: 8,
+    lineHeight: 22,
+  },
+  metadata: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 6,
+  },
+  domain: {
+    fontSize: 11,
+    fontStyle: 'italic',
+  },
+  favoriteContainer: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+  },
+});

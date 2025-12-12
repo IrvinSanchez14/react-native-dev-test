@@ -1,13 +1,16 @@
 import React from 'react';
+import { useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTopStories, useArticleActions } from '../hooks/useArticles';
 import { ScreenHeader } from '../components/molecules';
 import { ArticleList } from '../components/organisms';
 import { Article } from '../types/article';
+import type { AppTheme } from '../theme/theme';
 import type { TopStoriesListScreenProps } from '../types/navigation';
 import { styles } from './styles/TopStoriesScreen.styles';
 
 export function TopStoriesScreen({ navigation }: TopStoriesListScreenProps) {
+  const theme = useTheme<AppTheme>();
   const {
     data,
     isLoading,
@@ -57,7 +60,7 @@ export function TopStoriesScreen({ navigation }: TopStoriesListScreenProps) {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]} edges={['top']}>
       <ScreenHeader title="Top Stories" />
 
       <ArticleList

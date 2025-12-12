@@ -6,10 +6,12 @@ export const styles = StyleSheet.create({
   },
   content: {
     paddingVertical: 12,
+    paddingHorizontal: 16,
   },
   title: {
     marginBottom: 8,
     lineHeight: 22,
+    paddingRight: 40,
   },
   metadata: {
     flexDirection: 'row',
@@ -22,7 +24,8 @@ export const styles = StyleSheet.create({
   },
   favoriteContainer: {
     position: 'absolute',
-    top: 8,
-    right: 8,
+    top: 4,
+    right: 4,
+    zIndex: 1,
   },
 });

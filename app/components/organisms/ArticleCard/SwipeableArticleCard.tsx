@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable, View, ViewStyle } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { Card, CardContent, Text, IconButton } from '../../atoms';
 import { SwipeableWrapper, MetadataItem, DomainChip } from '../../molecules';
@@ -24,23 +24,51 @@ function SwipeableArticleCardComponent({
   showDelete = true,
 }: SwipeableArticleCardProps) {
   const theme = useTheme<AppTheme>();
+  
+  // Enhanced shadow for light mode to make cards more visible against white background
+  const cardShadowStyle: ViewStyle = !theme.dark ? {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 8,
+  } : {};
 
   return (
     <SwipeableWrapper onDelete={onDelete} showDelete={showDelete}>
-      <Card style={styles.card} mode="elevated">
+      <Card style={[styles.card, cardShadowStyle]} mode="elevated">
         <Pressable
           onPress={onPress}
           accessibilityRole="button"
           accessibilityLabel={`Article: ${article.title}`}
           accessibilityHint="Double tap to view article"
+          style={({ pressed }) => [
+            {
+              opacity: pressed ? 0.7 : 1,
+            },
+          ]}
         >
           <CardContent style={styles.content}>
-            {/* Title */}
-            <Text variant="titleMedium" style={styles.title} numberOfLines={2}>
+            {onToggleFavorite && (
+              <View style={styles.favoriteContainer}>
+                <IconButton
+                  icon={article.isFavorite ? 'star' : 'star-outline'}
+                  size={20}
+                  iconColor={article.isFavorite ? '#FFD700' : theme.custom.colors.textSecondary}
+                  onPress={onToggleFavorite}
+                  accessibilityLabel={article.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+                  accessibilityRole="button"
+                />
+              </View>
+            )}
+            <Text 
+              variant="titleMedium" 
+              style={styles.title} 
+              numberOfLines={2}
+            >
               {article.title}
             </Text>
 
-            {/* Metadata row */}
             <View style={styles.metadata}>
               <MetadataItem
                 icon="arrow-up"
@@ -61,7 +89,6 @@ function SwipeableArticleCardComponent({
               />
             </View>
 
-            {/* Domain */}
             {article.url && (
               <Text
                 variant="bodySmall"
@@ -71,20 +98,6 @@ function SwipeableArticleCardComponent({
                 {article.url.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]}
               </Text>
             )}
-
-            {/* Favorite button */}
-            {onToggleFavorite && (
-              <View style={styles.favoriteContainer}>
-                <IconButton
-                  icon={article.isFavorite ? 'star' : 'star-outline'}
-                  size={20}
-                  iconColor={article.isFavorite ? '#FFD700' : theme.custom.colors.textSecondary}
-                  onPress={onToggleFavorite}
-                  accessibilityLabel={article.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
-                  accessibilityRole="button"
-                />
-              </View>
-            )}
           </CardContent>
         </Pressable>
       </Card>
@@ -93,10 +106,14 @@ function SwipeableArticleCardComponent({
 }
 
 
-export const SwipeableArticleCard = React.memo(SwipeableArticleCardComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.article.id === nextProps.article.id &&
-    prevProps.article.isFavorite === nextProps.article.isFavorite &&
-    prevProps.showDelete === nextProps.showDelete
-  );
-});
+export const SwipeableArticleCard = React.memo(
+  SwipeableArticleCardComponent,
+  (prevProps, nextProps) => {
+    // Only re-render if article id, favorite status, or delete visibility changes
+    return (
+      prevProps.article.id === nextProps.article.id &&
+      prevProps.article.isFavorite === nextProps.article.isFavorite &&
+      prevProps.showDelete === nextProps.showDelete
+    );
+  }
+);

@@ -4,16 +4,19 @@ import { useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useMobileArticles, useDeleteArticle, useToggleFavorite } from '../hooks/useMobileArticles';
-import { SwipeableArticleCard } from '../components/organisms/ArticleCard/SwipeableArticleCard';
-import { LoadingSpinner, EmptyState } from '../components/molecules';
+import { SwipeableArticleCard, SwipeableArticleCardSkeleton } from '../components/organisms/ArticleCard';
+import { EmptyState } from '../components/molecules';
 import { ScreenHeader } from '../components/molecules';
 import { MobileArticle } from '../types/mobile-article';
 import type { AppTheme } from '../theme/theme';
+import type { MobileArticlesScreenProps } from '../types/navigation';
 import { styles } from './styles/MobileArticlesScreen.styles';
+
+const SKELETON_COUNT = 5;
 
 export function MobileArticlesScreen() {
   const theme = useTheme<AppTheme>();
-  const navigation = useNavigation();
+  const navigation = useNavigation<MobileArticlesScreenProps['navigation']>();
   const { data: articles = [], isLoading, refetch, isRefetching } = useMobileArticles();
   const deleteArticle = useDeleteArticle();
   const toggleFavorite = useToggleFavorite();
@@ -33,15 +36,21 @@ export function MobileArticlesScreen() {
     toggleFavorite.mutate(article.id);
   };
 
-  if (isLoading) {
-    return <LoadingSpinner message="Loading mobile articles..." />;
-  }
+  const renderSkeletonItem = () => <SwipeableArticleCardSkeleton />;
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]} edges={['top']}>
       <ScreenHeader title="Mobile Dev News" />
 
-      {articles.length === 0 ? (
+      {isLoading && articles.length === 0 ? (
+        <FlatList
+          data={Array.from({ length: SKELETON_COUNT })}
+          keyExtractor={(_, index) => `skeleton-${index}`}
+          renderItem={renderSkeletonItem}
+          contentContainerStyle={styles.listContent}
+          scrollEnabled={false}
+        />
+      ) : articles.length === 0 ? (
         <EmptyState
           icon="cellphone"
           title="No Articles"

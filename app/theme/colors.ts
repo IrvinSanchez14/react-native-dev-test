@@ -6,7 +6,7 @@ export const colors = {
   accent: '#FF6600',
 
   background: '#FFFFFF',
-  backgroundDark: '#1A1A1A',
+  backgroundDark: '#000000',
   surface: '#FFFFFF',
   surfaceDark: '#2C2C2C',
 

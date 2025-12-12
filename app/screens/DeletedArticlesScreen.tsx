@@ -26,7 +26,7 @@ export function DeletedArticlesScreen({ navigation }: DeletedArticlesScreenProps
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]} edges={['top']}>
       <ScreenHeader title="Deleted Articles" />
 
       {articles.length === 0 ? (

@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSavedArticles, useFavoriteArticles, useArticleActions } from '../hooks/useArticles';
 import { ScreenHeader } from '../components/molecules';
 import { ArticleList } from '../components/organisms';
 import { SegmentedButtons } from '../components/atoms';
 import { Article } from '../types/article';
+import type { AppTheme } from '../theme/theme';
 import type { SavedListScreenProps } from '../types/navigation';
 import { styles } from './styles/SavedArticlesScreen.styles';
 
 type TabType = 'saved' | 'favorites';
 
 export function SavedArticlesScreen({ navigation }: SavedListScreenProps) {
+  const theme = useTheme<AppTheme>();
   const [activeTab, setActiveTab] = useState<TabType>('saved');
 
   const { data: savedArticles = [], isLoading: isSavedLoading, refetch: refetchSaved } = useSavedArticles();
@@ -48,7 +51,7 @@ export function SavedArticlesScreen({ navigation }: SavedListScreenProps) {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]} edges={['top']}>
       <ScreenHeader
         title="Saved"
         actions={[

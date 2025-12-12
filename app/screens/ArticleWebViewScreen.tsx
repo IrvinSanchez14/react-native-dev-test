@@ -1,26 +1,29 @@
 import React from 'react';
-import { Appbar } from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
+import { ScreenHeader } from '../components/molecules';
+import type { AppTheme } from '../theme/theme';
 import type { RootStackParamList } from '../navigation/AppNavigator';
 import { styles } from './styles/ArticleWebViewScreen.styles';
 
-type RouteProp = { params: RootStackParamList['ArticleWebView'] };
-type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+type ArticleWebViewScreenProps = NativeStackScreenProps<RootStackParamList, 'ArticleWebView'>;
 
 export function ArticleWebViewScreen() {
-  const route = useRoute<RouteProp>();
-  const navigation = useNavigation<NavigationProp>();
+  const theme = useTheme<AppTheme>();
+  const route = useRoute<ArticleWebViewScreenProps['route']>();
+  const navigation = useNavigation<ArticleWebViewScreenProps['navigation']>();
   const { url, title } = route.params;
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <Appbar.Header>
-        <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title={title} titleStyle={styles.title} />
-      </Appbar.Header>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]} edges={['top']}>
+      <ScreenHeader
+        title={title}
+        showBack
+        onBack={() => navigation.goBack()}
+      />
 
       <WebView
         source={{ uri: url }}

@@ -16,3 +16,4 @@ export * from './Appbar';
 export * from './Switch';
 export * from './ListItem';
 export * from './SegmentedButtons';
+export * from './Skeleton';

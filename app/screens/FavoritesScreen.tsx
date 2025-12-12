@@ -33,7 +33,7 @@ export function FavoritesScreen({ navigation }: FavoritesScreenProps) {
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]} edges={['top']}>
       <ScreenHeader title="Favorites" />
 
       {articles.length === 0 ? (

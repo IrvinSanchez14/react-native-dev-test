@@ -169,7 +169,7 @@ export function SettingsScreen({ navigation, route }: SettingsScreenProps) {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]} edges={['top']}>
       <ScreenHeader title="Settings" />
 
       <ScrollView style={styles.scrollView}>

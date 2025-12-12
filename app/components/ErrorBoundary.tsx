@@ -112,7 +112,7 @@ const ErrorFallbackUI = memo<ErrorFallbackUIProps>(({ error, onReset }) => {
   const themeColors = useMemo(() => {
     const isDark = colorScheme === 'dark';
     return {
-      backgroundColor: isDark ? '#1A1A1A' : '#FFFFFF',
+      backgroundColor: isDark ? '#000000' : '#FFFFFF',
       textColor: isDark ? '#FFFFFF' : '#000000',
       secondaryTextColor: isDark ? '#AAAAAA' : '#666666',
       errorColor: '#F44336',

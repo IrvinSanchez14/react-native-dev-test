@@ -1,11 +1,13 @@
 import React, { useCallback } from 'react';
 import { FlatList, RefreshControl } from 'react-native';
 import { useTheme } from 'react-native-paper';
-import { ArticleCard } from '../ArticleCard';
-import { LoadingSpinner, EmptyState } from '../../molecules';
+import { ArticleCard, ArticleCardSkeleton } from '../ArticleCard';
+import { EmptyState } from '../../molecules';
 import type { Article } from '../../../types/article';
 import type { AppTheme } from '../../../theme/theme';
 import { styles } from './ArticleList.styles';
+
+const SKELETON_COUNT = 5;
 
 export interface ArticleListProps {
   articles: Article[];
@@ -61,9 +63,18 @@ export function ArticleList({
     [onArticlePress, onSaveArticle, onFavoriteArticle, showActions]
   );
 
+  const renderSkeletonItem = useCallback(() => <ArticleCardSkeleton />, []);
 
   if (isLoading && articles.length === 0) {
-    return <LoadingSpinner message="Loading articles..." />;
+    return (
+      <FlatList
+        data={Array.from({ length: SKELETON_COUNT })}
+        keyExtractor={(_, index) => `skeleton-${index}`}
+        renderItem={renderSkeletonItem}
+        contentContainerStyle={styles.contentContainer}
+        scrollEnabled={false}
+      />
+    );
   }
 
 

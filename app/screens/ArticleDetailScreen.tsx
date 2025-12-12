@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { ScrollView, Linking, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -19,77 +19,133 @@ export function ArticleDetailScreen({ route, navigation }: ArticleDetailScreenPr
   const { saveArticle, unsaveArticle, favoriteArticle, unfavoriteArticle, markAsUnread } =
     useArticleActions();
 
+  const handleGoBack = useCallback(() => {
+    navigation.goBack();
+  }, [navigation]);
+
+  const handleOpenUrl = useCallback(() => {
+    if (article?.url) {
+      Linking.openURL(article.url);
+    }
+  }, [article?.url]);
+
+  const handleToggleSave = useCallback(() => {
+    if (!article) return;
+    if (article.isSaved) {
+      unsaveArticle.mutate(article.id);
+    } else {
+      saveArticle.mutate(article.id);
+    }
+  }, [article, saveArticle, unsaveArticle]);
+
+  const handleToggleFavorite = useCallback(() => {
+    if (!article) return;
+    if (article.isFavorite) {
+      unfavoriteArticle.mutate(article.id);
+    } else {
+      favoriteArticle.mutate(article.id);
+    }
+  }, [article, favoriteArticle, unfavoriteArticle]);
+
+  const handleMarkUnread = useCallback(() => {
+    if (!article) return;
+    markAsUnread.mutate(article.id);
+  }, [article, markAsUnread]);
+
+  const formattedRelativeTime = useMemo(
+    () => (article ? formatRelativeTime(article.time) : ''),
+    [article?.time]
+  );
+
+  const formattedFullDate = useMemo(
+    () => (article ? formatFullDate(article.time) : ''),
+    [article?.time]
+  );
+
+  const cleanedText = useMemo(
+    () => (article?.text ? article.text.replace(/<[^>]*>/g, '') : ''),
+    [article?.text]
+  );
+
+  const readIconName = useMemo(
+    () => `eye${article?.isRead ? '-check' : '-outline'}`,
+    [article?.isRead]
+  );
+
+  const titleStyle = useMemo(
+    () => [styles.title, { color: theme.colors.onBackground }],
+    [theme.colors.onBackground]
+  );
+
+  const textStyle = useMemo(
+    () => [styles.text, { color: theme.colors.onBackground }],
+    [theme.colors.onBackground]
+  );
+
+  const secondaryTextColor = useMemo(
+    () => ({ color: theme.custom.colors.textSecondary }),
+    [theme.custom.colors.textSecondary]
+  );
+
+  const headerActions = useMemo(
+    () =>
+      article
+        ? [
+            {
+              icon: article.isSaved ? 'bookmark' : 'bookmark-outline',
+              onPress: handleToggleSave,
+              accessibilityLabel: article.isSaved ? 'Unsave' : 'Save',
+            },
+            {
+              icon: article.isFavorite ? 'star' : 'star-outline',
+              onPress: handleToggleFavorite,
+              accessibilityLabel: article.isFavorite ? 'Unfavorite' : 'Favorite',
+            },
+          ]
+        : [],
+    [article, handleToggleSave, handleToggleFavorite]
+  );
+
   if (isLoading) {
     return <LoadingSpinner message="Loading article..." />;
   }
 
   if (!article) {
     return (
-      <SafeAreaView style={styles.container} edges={['top']}>
+      <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]} edges={['top']}>
         <ScreenHeader
           title="Article"
           showBack
-          onBack={() => navigation.goBack()}
+          onBack={handleGoBack}
         />
         <EmptyState
           icon="alert-circle"
           title="Article Not Found"
           message="This article could not be loaded"
           actionLabel="Go Back"
-          onAction={() => navigation.goBack()}
+          onAction={handleGoBack}
         />
       </SafeAreaView>
     );
   }
 
-  const handleOpenUrl = () => {
-    if (article.url) {
-      Linking.openURL(article.url);
-    }
-  };
-
-  const handleToggleSave = () => {
-    if (article.isSaved) {
-      unsaveArticle.mutate(article.id);
-    } else {
-      saveArticle.mutate(article.id);
-    }
-  };
-
-  const handleToggleFavorite = () => {
-    if (article.isFavorite) {
-      unfavoriteArticle.mutate(article.id);
-    } else {
-      favoriteArticle.mutate(article.id);
-    }
-  };
-
-  const handleMarkUnread = () => {
-    markAsUnread.mutate(article.id);
-  };
-
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]} edges={['top']}>
       <ScreenHeader
         title="Article"
         showBack
-        onBack={() => navigation.goBack()}
-        actions={[
-          {
-            icon: article.isSaved ? 'bookmark' : 'bookmark-outline',
-            onPress: handleToggleSave,
-            accessibilityLabel: article.isSaved ? 'Unsave' : 'Save',
-          },
-          {
-            icon: article.isFavorite ? 'star' : 'star-outline',
-            onPress: handleToggleFavorite,
-            accessibilityLabel: article.isFavorite ? 'Unfavorite' : 'Favorite',
-          }
-        ]}
+        onBack={handleGoBack}
+        actions={headerActions}
       />
 
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.contentContainer}>
-        <Text variant="headlineMedium" style={[styles.title, { color: theme.colors.onBackground }]}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.contentContainer}
+        removeClippedSubviews={true}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={true}
+      >
+        <Text variant="headlineMedium" style={titleStyle}>
           {article.title}
         </Text>
 
@@ -101,7 +157,7 @@ export function ArticleDetailScreen({ route, navigation }: ArticleDetailScreenPr
               color={theme.custom.colors.textSecondary}
               style={styles.icon}
             />
-            <Text variant="bodyMedium" style={{ color: theme.custom.colors.textSecondary }}>
+            <Text variant="bodyMedium" style={secondaryTextColor}>
               {article.by}
             </Text>
           </View>
@@ -113,8 +169,8 @@ export function ArticleDetailScreen({ route, navigation }: ArticleDetailScreenPr
               color={theme.custom.colors.textSecondary}
               style={styles.icon}
             />
-            <Text variant="bodyMedium" style={{ color: theme.custom.colors.textSecondary }}>
-              {formatRelativeTime(article.time)}
+            <Text variant="bodyMedium" style={secondaryTextColor}>
+              {formattedRelativeTime}
             </Text>
           </View>
 
@@ -125,8 +181,8 @@ export function ArticleDetailScreen({ route, navigation }: ArticleDetailScreenPr
               color={theme.custom.colors.textSecondary}
               style={styles.icon}
             />
-            <Text variant="bodyMedium" style={{ color: theme.custom.colors.textSecondary }}>
-              {formatFullDate(article.time)}
+            <Text variant="bodyMedium" style={secondaryTextColor}>
+              {formattedFullDate}
             </Text>
           </View>
         </View>
@@ -140,7 +196,7 @@ export function ArticleDetailScreen({ route, navigation }: ArticleDetailScreenPr
               {article.descendants} comments
             </Chip>
           )}
-          <Chip icon={`eye${article.isRead ? '-check' : '-outline'}`} style={styles.statChip}>
+          <Chip icon={readIconName} style={styles.statChip}>
             {article.isRead ? 'Read' : 'Unread'}
           </Chip>
         </View>
@@ -149,11 +205,8 @@ export function ArticleDetailScreen({ route, navigation }: ArticleDetailScreenPr
 
         {article.text && (
           <View style={styles.textContainer}>
-            <Text
-              variant="bodyLarge"
-              style={[styles.text, { color: theme.colors.onBackground }]}
-            >
-              {article.text.replace(/<[^>]*>/g, '')}
+            <Text variant="bodyLarge" style={textStyle}>
+              {cleanedText}
             </Text>
           </View>
         )}

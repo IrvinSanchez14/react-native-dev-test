@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { PaperProvider } from 'react-native-paper';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { View } from 'react-native';
@@ -39,14 +39,45 @@ export default function App() {
         <QueryClientProvider client={queryClient}>
           <PaperProvider theme={activeTheme}>
             {!isReady ? (
-              <View style={styles.loadingContainer}>
+              <View style={[styles.loadingContainer, { backgroundColor: activeTheme.colors.background }]}>
                 <LoadingSpinner message="Initializing app..." />
               </View>
             ) : (
-              <NavigationContainer ref={navigationRef}>
-                <StatusBar style={statusBarStyle} />
-                <TabNavigator />
-              </NavigationContainer>
+              <View style={{ flex: 1, backgroundColor: activeTheme.colors.background }}>
+                <NavigationContainer
+                  ref={navigationRef}
+                  theme={
+                    activeTheme.dark
+                      ? {
+                          ...DarkTheme,
+                          colors: {
+                            ...DarkTheme.colors,
+                            primary: activeTheme.colors.primary,
+                            background: activeTheme.colors.background,
+                            card: activeTheme.colors.surface,
+                            text: activeTheme.colors.onBackground,
+                            border: activeTheme.colors.outline,
+                            notification: activeTheme.colors.primary,
+                          },
+                        }
+                      : {
+                          ...DefaultTheme,
+                          colors: {
+                            ...DefaultTheme.colors,
+                            primary: activeTheme.colors.primary,
+                            background: activeTheme.colors.background,
+                            card: activeTheme.colors.surface,
+                            text: activeTheme.colors.onBackground,
+                            border: activeTheme.colors.outline,
+                            notification: activeTheme.colors.primary,
+                          },
+                        }
+                  }
+                >
+                  <StatusBar style={statusBarStyle} />
+                  <TabNavigator />
+                </NavigationContainer>
+              </View>
             )}
           </PaperProvider>
         </QueryClientProvider>

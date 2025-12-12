@@ -25,7 +25,6 @@ function SwipeableArticleCardComponent({
 }: SwipeableArticleCardProps) {
   const theme = useTheme<AppTheme>();
   
-  // Enhanced shadow for light mode to make cards more visible against white background
   const cardShadowStyle: ViewStyle = !theme.dark ? {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
@@ -109,7 +108,6 @@ function SwipeableArticleCardComponent({
 export const SwipeableArticleCard = React.memo(
   SwipeableArticleCardComponent,
   (prevProps, nextProps) => {
-    // Only re-render if article id, favorite status, or delete visibility changes
     return (
       prevProps.article.id === nextProps.article.id &&
       prevProps.article.isFavorite === nextProps.article.isFavorite &&

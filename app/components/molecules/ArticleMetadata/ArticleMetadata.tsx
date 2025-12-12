@@ -18,26 +18,22 @@ export function ArticleMetadata({ article, showComments = true }: ArticleMetadat
   return (
     <View style={styles.container}>
       <View style={styles.metadataLeft}>
-        {/* Points */}
         <MetadataItem
           icon="arrow-up"
           text={article.score}
           color={theme.custom.colors.primary}
         />
 
-        {/* Author */}
         <MetadataItem
           icon="account"
           text={article.by}
         />
 
-        {/* Time */}
         <MetadataItem
           icon="clock-outline"
           text={formatRelativeTime(article.time)}
         />
 
-        {/* Comments */}
         {showComments && article.descendants !== undefined && article.descendants > 0 && (
           <MetadataItem
             icon="comment-outline"

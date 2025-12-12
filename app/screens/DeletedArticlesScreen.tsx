@@ -41,7 +41,7 @@ export function DeletedArticlesScreen({ navigation }: DeletedArticlesScreenProps
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <Card style={styles.card} mode="elevated">
-              <CardContent>
+              <CardContent style={styles.cardContent}>
                 <Text variant="titleMedium" numberOfLines={2}>
                   {item.title}
                 </Text>

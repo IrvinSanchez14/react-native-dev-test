@@ -1,9 +1,9 @@
 export const colors = {
-  primary: '#FF6600',
-  primaryDark: '#F0652F',
-  primaryLight: '#FF7733',
+  primary: '#1976D2',
+  primaryDark: '#1565C0',
+  primaryLight: '#42A5F5',
 
-  accent: '#FF6600',
+  accent: '#1976D2',
 
   background: '#FFFFFF',
   backgroundDark: '#000000',
@@ -30,7 +30,7 @@ export const colors = {
   borderDark: '#404040',
   divider: '#E0E0E0',
   dividerDark: '#404040',
-  ripple: 'rgba(255, 102, 0, 0.12)',
+  ripple: 'rgba(25, 118, 210, 0.12)',
 
   swipeDelete: '#F44336',
   swipeSave: '#4CAF50',
@@ -39,9 +39,9 @@ export const colors = {
   overlay: 'rgba(0, 0, 0, 0.5)',
   overlayLight: 'rgba(0, 0, 0, 0.3)',
 
-  notification: '#FF6600',
-  notificationBackground: '#FFF3E0',
-  notificationBackgroundDark: '#4A3520',
+  notification: '#1976D2',
+  notificationBackground: '#E3F2FD',
+  notificationBackgroundDark: '#0D47A1',
 } as const;
 
 export const lightColors = {

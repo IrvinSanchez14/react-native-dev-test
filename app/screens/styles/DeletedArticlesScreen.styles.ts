@@ -11,6 +11,9 @@ export const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginVertical: 8,
   },
+  cardContent: {
+    paddingVertical: 12,
+  },
   restoreButton: {
     marginTop: 12,
   },

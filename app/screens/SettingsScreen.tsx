@@ -67,7 +67,7 @@ export function SettingsScreen({ navigation, route }: SettingsScreenProps) {
   const handleTopicChange = (value: string) => {
     updateNotificationPreferences({
       topics: value as NotificationTopic,
-      lastCheckedTimestamp: Date.now(), // Reset to check for new articles
+      lastCheckedTimestamp: Date.now(),
     });
   };
 
@@ -173,7 +173,6 @@ export function SettingsScreen({ navigation, route }: SettingsScreenProps) {
       <ScreenHeader title="Settings" />
 
       <ScrollView style={styles.scrollView}>
-        {/* Notifications Section */}
         <NotificationSettings
           enabled={notificationPreferences.enabled}
           topics={notificationPreferences.topics}
@@ -186,7 +185,6 @@ export function SettingsScreen({ navigation, route }: SettingsScreenProps) {
 
         <Divider />
 
-        {/* Appearance Section */}
         <ThemeSettings
           themeMode={themeMode}
           onThemeChange={setThemeMode}
@@ -194,9 +192,8 @@ export function SettingsScreen({ navigation, route }: SettingsScreenProps) {
 
         <Divider />
 
-        {/* About Section */}
         <Card style={styles.card} mode="elevated">
-          <CardContent>
+          <CardContent style={styles.cardContent}>
             <Text variant="titleMedium" style={styles.sectionTitle}>
               About
             </Text>
@@ -230,15 +227,6 @@ export function SettingsScreen({ navigation, route }: SettingsScreenProps) {
             </View>
           </CardContent>
         </Card>
-
-        <View style={styles.footer}>
-          <Text
-            variant="bodySmall"
-            style={[styles.footerText, { color: theme.custom.colors.textSecondary }]}
-          >
-            Built with Expo, React Native, and React Native Paper
-          </Text>
-        </View>
       </ScrollView>
     </SafeAreaView>
   );

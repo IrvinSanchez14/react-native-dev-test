@@ -51,7 +51,7 @@ class AlgoliaAPI {
           query: MOBILE_QUERY,
           page,
           hitsPerPage: ALGOLIA_API_CONFIG.HITS_PER_PAGE,
-          tags: 'story', // Only get stories, not comments
+          tags: 'story',
         },
         signal,
       });

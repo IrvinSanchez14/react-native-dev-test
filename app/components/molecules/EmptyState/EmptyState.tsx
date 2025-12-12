@@ -1,19 +1,21 @@
 import React from 'react';
 import { View } from 'react-native';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Icon, Text, Button } from '../../atoms';
 import { useTheme } from 'react-native-paper';
 import type { AppTheme } from '../../../theme/theme';
 import { styles } from './EmptyState.styles';
 
 export interface EmptyStateProps {
-  icon?: string;
+  icon?: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
   title: string;
   message?: string;
   actionLabel?: string;
   onAction?: () => void;
 }
 
-export function EmptyState({ icon, title, message, actionLabel, onAction }: EmptyStateProps) {
+export function EmptyState(props: EmptyStateProps) {
+  const { icon, title, message, actionLabel, onAction } = props;
   const theme = useTheme<AppTheme>();
 
   return (

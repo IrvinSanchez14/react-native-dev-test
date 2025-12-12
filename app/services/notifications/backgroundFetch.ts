@@ -120,6 +120,6 @@ export async function unregisterBackgroundFetch(): Promise<void> {
   }
 }
 
-export async function getBackgroundFetchStatus(): Promise<BackgroundFetch.BackgroundFetchStatus> {
+export async function getBackgroundFetchStatus(): Promise<BackgroundFetch.BackgroundFetchStatus | null> {
   return await BackgroundFetch.getStatusAsync();
 }

@@ -27,7 +27,6 @@ export function FavoritesScreen({ navigation }: FavoritesScreenProps) {
     toggleFavorite.mutate(article.id);
   };
 
-  // Only show loading spinner on initial load when there's no data
   if (isLoading && articles.length === 0) {
     return <LoadingSpinner message="Loading favorites..." />;
   }

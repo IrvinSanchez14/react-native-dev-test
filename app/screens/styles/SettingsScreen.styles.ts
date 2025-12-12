@@ -11,6 +11,9 @@ export const styles = StyleSheet.create({
     margin: 16,
     marginBottom: 0,
   },
+  cardContent: {
+    paddingVertical: 16,
+  },
   sectionTitle: {
     marginBottom: 16,
     fontWeight: '600',

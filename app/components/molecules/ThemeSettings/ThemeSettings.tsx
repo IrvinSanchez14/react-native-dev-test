@@ -10,7 +10,7 @@ export interface ThemeSettingsProps {
 export function ThemeSettings({ themeMode, onThemeChange }: ThemeSettingsProps) {
   return (
     <Card style={styles.card} mode="elevated">
-      <CardContent>
+      <CardContent style={styles.cardContent}>
         <Text variant="titleMedium" style={styles.sectionTitle}>
           Appearance
         </Text>

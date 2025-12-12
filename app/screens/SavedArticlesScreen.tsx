@@ -63,7 +63,6 @@ export function SavedArticlesScreen({ navigation }: SavedListScreenProps) {
         ]}
       />
 
-      {/* Segmented Buttons for Tab Selection */}
       <View style={styles.segmentedContainer}>
         <SegmentedButtons
           value={activeTab}

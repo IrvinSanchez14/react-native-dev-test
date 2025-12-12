@@ -13,7 +13,7 @@ export interface FeedPageResult {
   nextPage: number;
 }
 
-async function fetchFeedArticlesPage(
+export async function fetchFeedArticlesPage(
   feedType: FeedType,
   page: number = 0,
   pageSize: number = PAGE_SIZE,
@@ -74,7 +74,23 @@ export function createFeedHook(feedType: FeedType) {
     api?: IHackerNewsAPI
   ): UseInfiniteQueryResult<FeedPageResult, Error> {
     const { setLastSync } = useArticleStore();
-    const queryKey = QUERY_KEYS[`${feedType}Stories` as keyof typeof QUERY_KEYS]();
+    
+    const getQueryKey = () => {
+      switch (feedType) {
+        case 'top':
+          return QUERY_KEYS.topStories();
+        case 'new':
+          return QUERY_KEYS.newStories();
+        case 'best':
+          return QUERY_KEYS.bestStories();
+        case 'ask':
+          return QUERY_KEYS.askStories();
+        default:
+          const _exhaustive: never = feedType;
+          throw new Error(`Unknown feed type: ${_exhaustive}`);
+      }
+    };
+    const queryKey = getQueryKey();
 
     return useInfiniteQuery({
       queryKey,

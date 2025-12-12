@@ -89,7 +89,11 @@ class Database {
 
   async exec(sql: string, params?: unknown[]): Promise<void> {
     const db = this.getDatabase();
-    await db.runAsync(sql, params);
+    if (params) {
+      await db.runAsync(sql, params as SQLite.SQLiteBindParams);
+    } else {
+      await db.runAsync(sql);
+    }
   }
 
   async transaction(statements: { sql: string; params?: unknown[] }[]): Promise<void> {
@@ -99,7 +103,11 @@ class Database {
       await db.execAsync('BEGIN TRANSACTION;');
 
       for (const { sql, params } of statements) {
-        await db.runAsync(sql, params);
+        if (params) {
+          await db.runAsync(sql, params as SQLite.SQLiteBindParams);
+        } else {
+          await db.runAsync(sql);
+        }
       }
 
       await db.execAsync('COMMIT;');
@@ -111,17 +119,29 @@ class Database {
 
   async getAll<T>(sql: string, params?: unknown[]): Promise<T[]> {
     const db = this.getDatabase();
-    return await db.getAllAsync<T>(sql, params);
+    if (params) {
+      return await db.getAllAsync<T>(sql, params as SQLite.SQLiteBindParams);
+    } else {
+      return await db.getAllAsync<T>(sql);
+    }
   }
 
   async getFirst<T>(sql: string, params?: unknown[]): Promise<T | null> {
     const db = this.getDatabase();
-    return await db.getFirstAsync<T>(sql, params);
+    if (params) {
+      return await db.getFirstAsync<T>(sql, params as SQLite.SQLiteBindParams);
+    } else {
+      return await db.getFirstAsync<T>(sql);
+    }
   }
 
   async run(sql: string, params?: unknown[]): Promise<SQLite.SQLiteRunResult> {
     const db = this.getDatabase();
-    return await db.runAsync(sql, params);
+    if (params) {
+      return await db.runAsync(sql, params as any);
+    } else {
+      return await db.runAsync(sql);
+    }
   }
 
   async close(): Promise<void> {

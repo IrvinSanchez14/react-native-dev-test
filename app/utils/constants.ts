@@ -2,9 +2,9 @@
 import { API_CONFIG } from '../config/env';
 
 export const COLORS = {
-  HN_ORANGE: '#FF6600',
-  HN_ORANGE_DARK: '#F0652F',
-  HN_ORANGE_LIGHT: '#FF7733',
+  HN_ORANGE: '#1976D2',
+  HN_ORANGE_DARK: '#1565C0',
+  HN_ORANGE_LIGHT: '#42A5F5',
 };
 
 export const CACHE_SETTINGS = {

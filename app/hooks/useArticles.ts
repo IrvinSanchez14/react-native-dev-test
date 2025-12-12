@@ -3,7 +3,7 @@ import { hnApi, IHackerNewsAPI } from '../services/api/hackerNewsApi';
 import { articleRepository } from '../services/database/articleRepository';
 import { Article, FeedType, HNArticle } from '../types/article';
 import { useArticleStore } from '../store/articleStore';
-import { createFeedHook } from './useFeedFactory';
+import { createFeedHook, fetchFeedArticlesPage } from './useFeedFactory';
 
 export const QUERY_KEYS = {
   topStories: () => ['articles', 'top'] as const,
@@ -61,9 +61,9 @@ export function useFavoriteArticles() {
   return useQuery({
     queryKey: QUERY_KEYS.favoriteArticles(),
     queryFn: () => articleRepository.getFavoriteArticles(),
-    staleTime: 30 * 1000, // Consider data fresh for 30 seconds
+    staleTime: 30 * 1000, 
     gcTime: 5 * 60 * 1000,
-    refetchOnMount: false, // Don't refetch when component mounts if data is fresh
+    refetchOnMount: false, 
   });
 }
 
@@ -138,21 +138,17 @@ export function useArticleActions() {
       await articleStore.favoriteArticle(id);
     },
     onMutate: async (id) => {
-      // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey: QUERY_KEYS.article(id) });
       await queryClient.cancelQueries({ queryKey: QUERY_KEYS.favoriteArticles() });
       await queryClient.cancelQueries({ queryKey: QUERY_KEYS.savedArticles() });
 
-      // Snapshot previous values
       const previousArticle = queryClient.getQueryData<Article>(QUERY_KEYS.article(id));
       const previousFavorites = queryClient.getQueryData<Article[]>(QUERY_KEYS.favoriteArticles());
 
-      // Optimistically update the article
       queryClient.setQueryData<Article>(QUERY_KEYS.article(id), (old) =>
         old ? { ...old, isFavorite: true } : old
       );
 
-      // Optimistically update favorites list
       queryClient.setQueryData<Article[]>(QUERY_KEYS.favoriteArticles(), (old) => {
         if (!old) return [];
         const article = queryClient.getQueryData<Article>(QUERY_KEYS.article(id));
@@ -165,14 +161,12 @@ export function useArticleActions() {
       return { previousArticle, previousFavorites };
     },
     onError: (err, id, context) => {
-      // Rollback on error
       if (context?.previousArticle) {
         queryClient.setQueryData(QUERY_KEYS.article(id), context.previousArticle);
       }
       if (context?.previousFavorites) {
         queryClient.setQueryData(QUERY_KEYS.favoriteArticles(), context.previousFavorites);
       }
-      // Only invalidate on error to ensure consistency after rollback
       invalidateArticleQueries(id);
     },
   });
@@ -182,21 +176,17 @@ export function useArticleActions() {
       await articleStore.unfavoriteArticle(id);
     },
     onMutate: async (id) => {
-      // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey: QUERY_KEYS.article(id) });
       await queryClient.cancelQueries({ queryKey: QUERY_KEYS.favoriteArticles() });
       await queryClient.cancelQueries({ queryKey: QUERY_KEYS.savedArticles() });
 
-      // Snapshot previous values
       const previousArticle = queryClient.getQueryData<Article>(QUERY_KEYS.article(id));
       const previousFavorites = queryClient.getQueryData<Article[]>(QUERY_KEYS.favoriteArticles());
 
-      // Optimistically update the article
       queryClient.setQueryData<Article>(QUERY_KEYS.article(id), (old) =>
         old ? { ...old, isFavorite: false } : old
       );
 
-      // Optimistically update favorites list
       queryClient.setQueryData<Article[]>(QUERY_KEYS.favoriteArticles(), (old) =>
         old ? old.filter((a) => a.id !== id) : []
       );
@@ -204,14 +194,12 @@ export function useArticleActions() {
       return { previousArticle, previousFavorites };
     },
     onError: (err, id, context) => {
-      // Rollback on error
       if (context?.previousArticle) {
         queryClient.setQueryData(QUERY_KEYS.article(id), context.previousArticle);
       }
       if (context?.previousFavorites) {
         queryClient.setQueryData(QUERY_KEYS.favoriteArticles(), context.previousFavorites);
       }
-      // Only invalidate on error to ensure consistency after rollback
       invalidateArticleQueries(id);
     },
   });
@@ -221,41 +209,34 @@ export function useArticleActions() {
       await articleStore.deleteArticle(id);
     },
     onMutate: async (id) => {
-      // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey: QUERY_KEYS.article(id) });
       await queryClient.cancelQueries({ queryKey: QUERY_KEYS.favoriteArticles() });
       await queryClient.cancelQueries({ queryKey: QUERY_KEYS.savedArticles() });
       await queryClient.cancelQueries({ queryKey: ['articles'] });
 
-      // Snapshot previous values
       const previousArticle = queryClient.getQueryData<Article>(QUERY_KEYS.article(id));
       const previousFavorites = queryClient.getQueryData<Article[]>(QUERY_KEYS.favoriteArticles());
       const previousSaved = queryClient.getQueryData<Article[]>(QUERY_KEYS.savedArticles());
 
-      // Optimistically remove from favorites list if it was favorited
       queryClient.setQueryData<Article[]>(QUERY_KEYS.favoriteArticles(), (old) =>
         old ? old.filter((article) => article.id !== id) : []
       );
 
-      // Optimistically remove from saved articles list if it was saved
       queryClient.setQueryData<Article[]>(QUERY_KEYS.savedArticles(), (old) =>
         old ? old.filter((article) => article.id !== id) : []
       );
 
-      // Remove the article from cache
       queryClient.removeQueries({ queryKey: QUERY_KEYS.article(id) });
 
       return { previousArticle, previousFavorites, previousSaved };
     },
     onError: (err, id, context) => {
-      // Rollback on error
       if (context?.previousFavorites) {
         queryClient.setQueryData(QUERY_KEYS.favoriteArticles(), context.previousFavorites);
       }
       if (context?.previousSaved) {
         queryClient.setQueryData(QUERY_KEYS.savedArticles(), context.previousSaved);
       }
-      // Only invalidate on error to ensure consistency after rollback
       invalidateArticleQueries(id);
       queryClient.invalidateQueries({ queryKey: ['articles'] });
     },

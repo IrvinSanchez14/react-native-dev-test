@@ -8,16 +8,22 @@ export function useNotificationNavigation() {
 
   useEffect(() => {
     const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
-      const data = response.notification.request.content.data;
+      const data = response.notification.request.content.data as {
+        type?: string;
+        url?: string;
+        title?: string;
+      };
 
-      if (data.type === 'new_article' && data.url) {
+      if (data.type === 'new_article' && data.url && typeof data.url === 'string') {
+        const url: string = data.url;
+        const title: string = typeof data.title === 'string' ? data.title : 'Article';
 
         if (navigationRef.current?.isReady()) {
           navigationRef.current.navigate('ArticlesTab', {
             screen: 'ArticleWebView',
             params: {
-              url: data.url,
-              title: data.title || 'Article',
+              url,
+              title,
             },
           });
         }

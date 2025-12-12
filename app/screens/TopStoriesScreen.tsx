@@ -1,16 +1,19 @@
 import React from 'react';
 import { useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import type { InfiniteData } from '@tanstack/react-query';
 import { useTopStories, useArticleActions } from '../hooks/useArticles';
 import { ScreenHeader } from '../components/molecules';
 import { ArticleList } from '../components/organisms';
 import { Article } from '../types/article';
 import type { AppTheme } from '../theme/theme';
 import type { TopStoriesListScreenProps } from '../types/navigation';
+import type { FeedPageResult } from '../hooks/useFeedFactory';
 import { styles } from './styles/TopStoriesScreen.styles';
 
 export function TopStoriesScreen({ navigation }: TopStoriesListScreenProps) {
   const theme = useTheme<AppTheme>();
+  const queryResult = useTopStories();
   const {
     data,
     isLoading,
@@ -19,14 +22,14 @@ export function TopStoriesScreen({ navigation }: TopStoriesListScreenProps) {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useTopStories();
+  } = queryResult;
   const { saveArticle, unsaveArticle, favoriteArticle, unfavoriteArticle, markAsRead } =
     useArticleActions();
 
-
+  const infiniteData = data as InfiniteData<FeedPageResult> | undefined;
   const articles = React.useMemo(
-    () => data?.pages.flatMap((page) => page.articles) ?? [],
-    [data]
+    () => infiniteData?.pages.flatMap((page: FeedPageResult) => page.articles) ?? [],
+    [infiniteData]
   );
 
   const handleArticlePress = async (article: Article) => {

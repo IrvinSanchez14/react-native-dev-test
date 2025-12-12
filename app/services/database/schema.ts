@@ -147,11 +147,4 @@ export const MIGRATIONS: Migration[] = [
     up: [...CREATE_TABLES, ...CREATE_INDEXES],
     down: DROP_TABLES,
   },
-
-
-
-
-
-
-
 ];
